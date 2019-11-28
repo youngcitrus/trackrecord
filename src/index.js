@@ -45,16 +45,35 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
           .attr("width", 448)
           .attr("height", 448)
 
-        body.albums.items.forEach((album,i) => {
-          let xPos = (i % 7) * 64;
-          let yPos = Math.floor(i / 7) * 64;
-
-          let albumArt = svg.append('image')
-          .attr('xlink:href', album.images[2].url)
+        let artwork = svg.selectAll("image")
+          .data(body.albums.items);
+        
+        artwork.enter()
+          .append("image")
+          .attr('xlink:href', function(d){
+            return d.images[2].url
+          })
           .attr('width', 64)
           .attr('height', 64)
-          .attr('x', xPos)
-          .attr('y', yPos)
+          .attr('x', function(d, i){
+            return (i % 7) * 64
+          })
+          .attr('y', function(d, i){
+            return Math.floor(i / 7) * 64
+          })
+          .on('mouseover', function (d, i) {
+            d3.select(this).transition()
+                 .duration('50')
+                 .attr('opacity', '.85')
+          })
+          .on('mouseout', function (d, i) {
+            d3.select(this).transition()
+                 .duration('50')
+                 .attr('opacity', '1');
+          })
+
+        
+        
 
 
           // make API call to get tracks from albums
@@ -90,7 +109,7 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
 
           //   });
           // });
-        });
+        
         const infoWindow = d3.select("#main").append("svg")
           .attr("width", 448)
           .attr("height", 448)
