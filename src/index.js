@@ -66,18 +66,26 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("x", 0)
           .attr("y", 300)
           .attr("font-family", "Roboto")
-          .attr("font-size", "20px")
+          .attr("font-size", "19px")
 
         const artistText = infoWindow.append('text')
           .attr("x", 0)
           .attr("y", 320)
           .attr("font-family", "Roboto")
+          .attr("font-size", "16px")
 
 
         const releaseDateText = infoWindow.append('text')
           .attr("x", 0)
           .attr("y", 340)
           .attr("font-family", "Roboto")
+          .attr("font-size", "16px")
+
+        const albumType = infoWindow.append('text')
+          .attr("x", 0)
+          .attr("y", 360)
+          .attr("font-family", "Roboto")
+          .attr("font-size", "16px")
 
         let artwork = svg.selectAll("image")
           .data(body.albums.items);
@@ -101,7 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
             d3.select(this).transition()
                  .duration('50')
                  .attr('opacity', '.85')
-
+          })
+          
+          .on('click', function (d, i) {
+          
             infoWindow.append('image')
               .attr('xlink:href', d.images[1].url)
               .attr('x', 0)
@@ -110,20 +121,40 @@ document.addEventListener('DOMContentLoaded', () => {
               .attr('height', 250)
               .attr('id', 'showImage')
 
+            const foreignObject = infoWindow.append('foreignObject')
+              .attr('x', 0)
+              .attr('y', 380)
+              .attr('width', 300)
+              .attr('height', 80)
+
+            if (d3.select('iframe')) d3.select('iframe').remove();
+
+            const player = foreignObject.append("xhtml:iframe")
+                .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
+                .attr('height', 300)
+                .attr('width', 80)
+                .attr('allow', 'encrypted-media')
+
             let artists = [];
             d.artists.forEach(artist => {
               artists.push(artist.name)
             })
+            // let artistsDisplay = "Artist: " + artists.join(", ");
 
             let date = new Date(d.release_date)
             date = date.toString().split(" ");
             date = [date[1], date[2], date[3]].join(" ")
 
+            let albumName = d.name
+            if (albumName.length > 48){
+              albumName = albumName.slice(0,48) + "..."
+            }
+
             svgText.text("")
             svgText2.text("")
 
             albumText.text("")
-            albumText.text(d.name)
+            albumText.text(albumName)
 
             artistText.text("")
             artistText.text("Artist: " + artists.join(", "))
@@ -131,6 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
             releaseDateText.text("Released: " + date)
 
           })
+          
           .on('mouseout', function (d, i) {
             d3.select(this).transition()
                  .duration('50')
