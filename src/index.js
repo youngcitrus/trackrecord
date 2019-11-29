@@ -3,7 +3,7 @@ const request = require('request');
 const client_id = '2ac94934ad554c1c86adad5ab47d1553'; // Your client id
 const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
 
-  document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', () => {
   console.log('hi');
 
   //request auth token from Spotify API
@@ -45,6 +45,40 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
           .attr("width", 448)
           .attr("height", 448)
 
+        const infoWindow = d3.select("#main").append("svg")
+          .attr("width", 448)
+          .attr("height", 448)
+          .attr('x', 448)
+
+        const svgText = infoWindow.append('text')
+          .attr("x", 100)
+          .attr("y", 200)
+          .attr("font-family", "Roboto")
+          .text("Mouseover an album image for details")
+
+        const svgText2 = infoWindow.append('text')
+          .attr("x", 100)
+          .attr("y", 225)
+          .attr("font-family", "Roboto")
+          .text("When ready click the arrow below for more data")
+
+        const albumText = infoWindow.append('text')
+          .attr("x", 0)
+          .attr("y", 300)
+          .attr("font-family", "Roboto")
+          .attr("font-size", "20px")
+
+        const artistText = infoWindow.append('text')
+          .attr("x", 0)
+          .attr("y", 320)
+          .attr("font-family", "Roboto")
+
+
+        const releaseDateText = infoWindow.append('text')
+          .attr("x", 0)
+          .attr("y", 340)
+          .attr("font-family", "Roboto")
+
         let artwork = svg.selectAll("image")
           .data(body.albums.items);
         
@@ -61,10 +95,41 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
           .attr('y', function(d, i){
             return Math.floor(i / 7) * 64
           })
+
           .on('mouseover', function (d, i) {
+            
             d3.select(this).transition()
                  .duration('50')
                  .attr('opacity', '.85')
+
+            infoWindow.append('image')
+              .attr('xlink:href', d.images[1].url)
+              .attr('x', 0)
+              .attr('y', 0)
+              .attr('width', 250)
+              .attr('height', 250)
+              .attr('id', 'showImage')
+
+            let artists = [];
+            d.artists.forEach(artist => {
+              artists.push(artist.name)
+            })
+
+            let date = new Date(d.release_date)
+            date = date.toString().split(" ");
+            date = [date[1], date[2], date[3]].join(" ")
+
+            svgText.text("")
+            svgText2.text("")
+
+            albumText.text("")
+            albumText.text(d.name)
+
+            artistText.text("")
+            artistText.text("Artist: " + artists.join(", "))
+            
+            releaseDateText.text("Released: " + date)
+
           })
           .on('mouseout', function (d, i) {
             d3.select(this).transition()
@@ -110,10 +175,7 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
           //   });
           // });
         
-        const infoWindow = d3.select("#main").append("svg")
-          .attr("width", 448)
-          .attr("height", 448)
-          .attr('x', 448)
+        
       });
     }
   });
