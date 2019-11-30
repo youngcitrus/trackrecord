@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const foreignObject = infoWindow.append('foreignObject')
               .attr('x', 0)
-              .attr('y', 380)
+              .attr('y', 370)
               .attr('width', 448)
               .attr('height', 80)
 
@@ -194,12 +194,52 @@ document.addEventListener('DOMContentLoaded', () => {
 
             successCounter += 1;
             if (successCounter === 49){
-              console.log(trackIds)
+              let audioFeatures = [];
+              let numRecursions = Math.floor(trackIds.length/100) + 1;
+
+              function fetchAllTracks(ids){
+                if (ids.length === 0) return;
+                firstHundred = ids.slice(0, 100);
+                remaining = ids.slice(100)
+                let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
+                let tracksOptions = {
+                url: tracksUrl,
+                headers: {
+                  'Authorization': 'Bearer ' + token
+                  },
+                json: true
+                };
+
+                request.get(tracksOptions, function(error, response, body){
+                  audioFeatures.push(body);
+                  if (audioFeatures.length === numRecursions){
+                    console.log('test')
+                    console.log(audioFeatures)
+                    console.log(audioFeatures.length)
+                    let allAudioFeatures = [];
+                    audioFeatures.forEach(part => {
+                      part.audio_features.forEach(datum => {
+                        console.log(datum)
+                        if (datum) allAudioFeatures.push(datum)
+                      })
+                    })
+                    console.log(allAudioFeatures)
+
+
+
+
+                  }
+
+                })
+                return fetchAllTracks(remaining);
+
+              }
+
+              fetchAllTracks(trackIds);
+
             }
 
           });
-
-
           
         })
       });
