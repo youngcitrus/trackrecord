@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         json: true
       };
 
-      const tracks = [];
+      const trackIds = [];
       const albums = [];
 
       request.get(options, function(error, response, body) {
@@ -124,15 +124,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const foreignObject = infoWindow.append('foreignObject')
               .attr('x', 0)
               .attr('y', 380)
-              .attr('width', 300)
+              .attr('width', 448)
               .attr('height', 80)
 
             if (d3.select('iframe')) d3.select('iframe').remove();
 
             const player = foreignObject.append("xhtml:iframe")
                 .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
-                .attr('height', 300)
-                .attr('width', 80)
                 .attr('allow', 'encrypted-media')
 
             let artists = [];
@@ -170,44 +168,40 @@ document.addEventListener('DOMContentLoaded', () => {
           })
 
         
+        let successCounter = 0
         
+        body.albums.items.forEach((album) => {
 
+          // albums.push(album.name);
 
           // make API call to get tracks from albums
-          // let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
-          // let albumOptions = {
-          //   url: albumUrl,
-          //   headers: {
-          //     'Authorization': 'Bearer ' + token
-          //   },
-          //   json: true
-          // };
+          let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
+          let albumOptions = {
+            url: albumUrl,
+            headers: {
+              'Authorization': 'Bearer ' + token
+            },
+            json: true
+          };
+          
+          request.get(albumOptions, function(error, response, body){
+
+            body.items.forEach(track => {
+              track.artists.forEach(artist => {console.log('artist:' + artist.name)});
+              console.log('track:' + track.name)
+              trackIds.push(track.id)
+            });
+
+            successCounter += 1;
+            if (successCounter === 49){
+              console.log(trackIds)
+            }
+
+          });
+
 
           
-          // request.get(albumOptions, function(error, response, body){
-          //   body.items.forEach(track => {
-          //     track.artists.forEach(artist => {console.log('artist:' + artist.name)});
-          //     console.log('track:' + track.name)
-
-              // make API call to get audio features of tracks
-              // let trackUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features/' + track.id;
-              
-              // let trackOptions = {
-              //   url: trackUrl,
-              //   headers: {
-              //     'Authorization': 'Bearer ' + token
-              //   },
-              //   json: true
-              // };
-              
-              // request.get(trackOptions, function(error, response, body) {
-              //   console.log(body);
-              // })
-
-          //   });
-          // });
-        
-        
+        })
       });
     }
   });
