@@ -54,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("x", 100)
           .attr("y", 200)
           .attr("font-family", "Roboto")
-          .text("Mouseover an album image for details")
+          .text("Click an album image for details")
 
         const svgText2 = infoWindow.append('text')
           .attr("x", 100)
@@ -187,8 +187,8 @@ document.addEventListener('DOMContentLoaded', () => {
           request.get(albumOptions, function(error, response, body){
 
             body.items.forEach(track => {
-              track.artists.forEach(artist => {console.log('artist:' + artist.name)});
-              console.log('track:' + track.name)
+              // track.artists.forEach(artist => {console.log('artist:' + artist.name)});
+              // console.log('track:' + track.name)
               trackIds.push(track.id)
             });
 
@@ -213,20 +213,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 request.get(tracksOptions, function(error, response, body){
                   audioFeatures.push(body);
                   if (audioFeatures.length === numRecursions){
-                    console.log('test')
-                    console.log(audioFeatures)
-                    console.log(audioFeatures.length)
+                    // console.log('test')
+                    // console.log(audioFeatures)
+                    // console.log(audioFeatures.length)
                     let allAudioFeatures = [];
                     audioFeatures.forEach(part => {
                       part.audio_features.forEach(datum => {
-                        console.log(datum)
+                        // console.log(datum)
                         if (datum) allAudioFeatures.push(datum)
                       })
                     })
                     console.log(allAudioFeatures)
+                    
+                    const graphHeight = 800;
+                    const graphWidth = 800;
+                    const scaleTempo = d3.scaleLinear()
+                      .domain([40, 230])
+                      .range([0, graphWidth])
 
+                    const scaleValence = d3.scaleLinear()
+                      .domain([0,1])
+                      .range(['#52a9ff', '#ff9452']);
 
+                    const graph = d3.select("#scatterplot").append("svg")
+                      .attr("width", graphWidth)
+                      .attr("height", graphHeight)
 
+                    const trackInfoWindow = d3.select("#scatterplot").append("svg")
+                      .attr("width", 448)
+                      .attr("height", 448)
+                      .attr('x', 800)
+                    
+                    const dataPoints = graph.selectAll("circle")
+                      .data(allAudioFeatures)
+
+                    dataPoints.enter()
+                      .append("circle")
+                      .attr("cx", function(d){
+                        return scaleTempo(d.tempo)
+                      })
+                      .attr("cy", function(d){
+                        return graphHeight - d.danceability * 800
+                      })
+                      .attr("r", function(d){
+                        return d.energy * 10
+                      })
+                      .attr("fill", function(d){
+                        return scaleValence(d.valence)
+                      })
+
+                      .on('mouseover', function (d, i) {
+                        d3.select(this).transition()
+                             .duration('50')
+                             .attr('opacity', '.70')
+                      })
+
+                      .on('mouseout', function (d, i) {
+                        d3.select(this).transition()
+                             .duration('50')
+                             .attr('opacity', '1');
+                      })
+
+                      .on('click', function (d, i) {
+                      
+                      
+                      })
 
                   }
 
