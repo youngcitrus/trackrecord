@@ -121,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .attr('height', 250)
               .attr('id', 'showImage')
 
-            const foreignObject = infoWindow.append('foreignObject')
+            let foreignObject = infoWindow.append('foreignObject')
               .attr('x', 0)
               .attr('y', 370)
               .attr('width', 448)
@@ -129,7 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (d3.select('iframe')) d3.select('iframe').remove();
 
-            const player = foreignObject.append("xhtml:iframe")
+            let player = foreignObject.append("xhtml:iframe")
                 .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
                 .attr('allow', 'encrypted-media')
 
@@ -244,6 +244,16 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr("height", 448)
                       .attr('x', 800)
                     
+                    const trackTempoText = trackInfoWindow.append("text")
+                      .attr('x', 25)
+                      .attr("y", 25)
+                      .text("")
+                    
+                    const trackDanceabilityText = trackInfoWindow.append("text")
+                      .attr('x', 25)
+                      .attr("y", 200)
+                      .text("")
+
                     const dataPoints = graph.selectAll("circle")
                       .data(allAudioFeatures)
 
@@ -274,8 +284,18 @@ document.addEventListener('DOMContentLoaded', () => {
                              .attr('opacity', '1');
                       })
 
-                      .on('click', function (d, i) {
-                      
+                      .on('click', function (d) {
+                        let foreignObject = trackInfoWindow.append('foreignObject')
+                          .attr('x', 0)
+                          .attr('y', 370)
+                          .attr('width', 448)
+                          .attr('height', 80)
+                        // let player = foreignObject.append("xhtml:iframe")
+                        //   .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
+                        //   .attr('allow', 'encrypted-media')
+
+                        trackTempoText.text(d.tempo)
+                        trackDanceabilityText.text(d.danceability)
                       
                       })
 
