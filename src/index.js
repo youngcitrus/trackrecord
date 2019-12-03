@@ -127,9 +127,10 @@ document.addEventListener('DOMContentLoaded', () => {
               .attr('width', 448)
               .attr('height', 80)
 
-            if (d3.select('iframe')) d3.select('iframe').remove();
+            if (d3.select('#album-player')) d3.select('#album-player').remove();
 
             let player = foreignObject.append("xhtml:iframe")
+                .attr('id', 'album-player')
                 .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
                 .attr('allow', 'encrypted-media')
 
@@ -285,14 +286,16 @@ document.addEventListener('DOMContentLoaded', () => {
                       })
 
                       .on('click', function (d) {
+                        if (d3.select('#track-player')) d3.select('#track-player').remove();
                         let foreignObject = trackInfoWindow.append('foreignObject')
                           .attr('x', 0)
                           .attr('y', 370)
                           .attr('width', 448)
                           .attr('height', 80)
-                        // let player = foreignObject.append("xhtml:iframe")
-                        //   .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
-                        //   .attr('allow', 'encrypted-media')
+                        let player = foreignObject.append("xhtml:iframe")
+                          .attr('id', 'track-player')
+                          .attr('src', 'https://open.spotify.com/embed/track/' + d.id)
+                          .attr('allow', 'encrypted-media')
 
                         trackTempoText.text(d.tempo)
                         trackDanceabilityText.text(d.danceability)
