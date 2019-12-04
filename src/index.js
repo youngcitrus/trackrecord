@@ -260,9 +260,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     dataPoints.enter()
                       .append("circle")
-                      .attr("cx", function(d){
-                        return scaleTempo(d.tempo)
-                      })
+                      .attr("class", "track-data-point")
+                      // .attr("cx", function(d){
+                      //   return scaleTempo(d.tempo)
+                      // })
+                      .attr("cx", -20)
                       .attr("cy", function(d){
                         return graphHeight - d.danceability * 800
                       })
@@ -297,11 +299,66 @@ document.addEventListener('DOMContentLoaded', () => {
                           .attr('src', 'https://open.spotify.com/embed/track/' + d.id)
                           .attr('allow', 'encrypted-media')
 
-                        trackTempoText.text(d.tempo)
-                        trackDanceabilityText.text(d.danceability)
-                      
+                        trackTempoText.text("Tempo: " + d.tempo)
+                        trackDanceabilityText.text("Danceability: " + d.danceability)
+                        
                       })
 
+                      graph.selectAll("circle")
+                          .transition()
+                          .delay(function(d,i){return(i*3)})
+                          .duration(2000)
+                          .attr("cx", function(d){
+                            return scaleTempo(d.tempo)
+                          })
+                          .attr("cy", function(d){
+                            return graphHeight - d.danceability * 800
+                          })
+                      
+                      let dataByKey = {};
+                      const keys = ["C", "Db/C#", "D", "Eb", "E", "F", "Gb/F#", "G", "Ab", "A", "Bb", "B"]
+                      allAudioFeatures.forEach((track) => {
+                        let key = keys[track.key]
+                        if (!dataByKey[key]) dataByKey[key] = [];
+                        dataByKey[key].push(track)
+                      })
+                      console.log(dataByKey)
+                      // let dataByKeyArray = Object.values(dataByKey)
+                      // console.log(dataByKeyArray)
+
+                      const pie = d3.pie()
+                        .value(function(d) {return d.value.length})
+                        .sort(null)
+                      const arc = d3.arc()
+                        .innerRadius(300)
+                        .outerRadius(380)
+
+                      let colors = d3.scaleOrdinal()
+                        .domain(dataByKey)
+                        .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
+
+                      let dataReady = pie(d3.entries(dataByKey))
+
+                      let pieChartArea = d3.select("#pie-chart").append("svg")
+                        .attr("width", 800)
+                        .attr("height", 800)
+                        .append("g")
+                        .attr("transform", "translate(400, 400)")
+                      
+                      pieChartArea.selectAll()
+                        .data(dataReady)
+                        .enter()
+                        .append('path')
+                        .attr('d', arc)
+                        .attr('fill', function(d){ return(colors(d.data.key)) })
+                        .attr("stroke", "black")
+                        .style("stroke-width", "2px")
+                        .style("opacity", 0.7)
+                        .append("text")
+                        .text(function(d){return d.data.key})
+                        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")" })
+                        .style("text-anchor", "middle")
+                        .style("font-size", 17)
                   }
 
                 })
