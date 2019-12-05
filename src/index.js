@@ -330,7 +330,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       console.log(dataByKey)
                       // let dataByKeyArray = Object.values(dataByKey)
                       // console.log(dataByKeyArray)
-                      
+
                       const pie = d3.pie()
                         .value(function(d) {return d.value.length})
                         .sort(null)
@@ -372,6 +372,52 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style("text-anchor", "middle")
                           .style("font-size", 17)
                           .style("font-family", "Roboto")
+
+
+                      console.log('testing')
+                      
+                      const sunburstX = d3.scaleLinear()
+                        .range([0, 2 * Math.PI])
+                      const sunburstY = d3.scaleLinear()
+                        .range([0, 400])
+
+                      const partition = d3.partition()
+
+                      const sunburstArc = d3.arc()
+                        .startAngle(function(d){ return Math.max(0, Math.min(2 * Math.PI, sunburstX(d.x0))) })
+                        .endAngle(function(d){ return Math.max(0, Math.min(2 * Math.PI, sunburstX(d.x1))) })
+                        .innerRadius(function(d){ return Math.max(0, sunburstY(d.y0)) })
+                        .outerRadius(function(d){ return Math.max(0, sunburstY(d.y1)) })
+
+                      let sunburstColors = d3.scaleOrdinal(d3.schemeCategory20c)
+
+                      let root = {name: "dataByKey", children: []}
+                      for (let i=0; i < 12; i++){
+                        root.children.push({name: i, children: dataByKey[i], size: dataByKey[i].length})
+                      }
+
+                      console.log(root)
+
+                      root = d3.hierarchy(root)
+                        .sum(function(d){ return d.size })
+
+                      console.log(partition(root).descendants())
+
+                      const sunburstArea = d3.select("#sunburst").append("svg")
+                        .attr("width", 800)
+                        .attr("height", 800)
+                        .append("g")
+                        .attr("transform", "translate(400, 400)")
+                      
+                      sunburstArea.selectAll("path")
+                        .data(partition(root).descendants())
+                        .enter()
+                        .append("path")
+                        .attr("d", sunburstArc)
+                        .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
+                        .attr("stroke", "black")
+                        
+
                   }
 
                 })
