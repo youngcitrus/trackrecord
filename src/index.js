@@ -399,7 +399,10 @@ document.addEventListener('DOMContentLoaded', () => {
                       console.log(root)
 
                       root = d3.hierarchy(root)
-                        .sum(function(d){ return d.size })
+                        .sum(function(d){ 
+                          if (d.size) return d.size
+                          else return 20;
+                        })
 
                       console.log(partition(root).descendants())
 
