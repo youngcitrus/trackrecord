@@ -317,21 +317,31 @@ document.addEventListener('DOMContentLoaded', () => {
                       
                       let dataByKey = {};
                       const keys = ["C", "Db/C#", "D", "Eb", "E", "F", "Gb/F#", "G", "Ab", "A", "Bb", "B"]
+                      const circleOfFifths = ["C", "G", "D", "A", "E", "B", "Gb/F#", "Db/C#", "Ab", "Eb", "Bb", "F"]
                       allAudioFeatures.forEach((track) => {
                         let key = keys[track.key]
-                        if (!dataByKey[key]) dataByKey[key] = [];
-                        dataByKey[key].push(track)
+                        let order = circleOfFifths.indexOf(key);
+                        if (!dataByKey[key]) {    
+                          dataByKey[order] = []
+                          // dataByKey[key]["order"] = order
+                        }
+                        dataByKey[order].push(track)
                       })
                       console.log(dataByKey)
                       // let dataByKeyArray = Object.values(dataByKey)
                       // console.log(dataByKeyArray)
-
+                      
                       const pie = d3.pie()
                         .value(function(d) {return d.value.length})
                         .sort(null)
+                        
                       const arc = d3.arc()
                         .innerRadius(300)
                         .outerRadius(380)
+                      
+                      const labelArc = d3.arc()
+                        .innerRadius(200)
+                        .outerRadius(200)
 
                       let colors = d3.scaleOrdinal()
                         .domain(dataByKey)
@@ -345,20 +355,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         .append("g")
                         .attr("transform", "translate(400, 400)")
                       
-                      pieChartArea.selectAll()
+                      const g = pieChartArea.selectAll('.arc')
                         .data(dataReady)
                         .enter()
-                        .append('path')
+                        .append('g')
+                          .attr('class', 'arc')
+                      g.append('path')
                         .attr('d', arc)
                         .attr('fill', function(d){ return(colors(d.data.key)) })
                         .attr("stroke", "black")
                         .style("stroke-width", "2px")
                         .style("opacity", 0.7)
-                        .append("text")
-                        .text(function(d){return d.data.key})
-                        .attr("transform", function(d) { return "translate(" + arc.centroid(d) + ")" })
-                        .style("text-anchor", "middle")
-                        .style("font-size", 17)
+                      g.append("text")
+                          .text(function(d){return circleOfFifths[d.data.key]})
+                          .attr("transform", function(d) { return ( "translate(" + arc.centroid(d) + ")" )})
+                          .style("text-anchor", "middle")
+                          .style("font-size", 17)
                   }
 
                 })
