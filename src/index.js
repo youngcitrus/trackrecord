@@ -321,7 +321,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       allAudioFeatures.forEach((track) => {
                         let key = keys[track.key]
                         let order = circleOfFifths.indexOf(key);
-                        if (!dataByKey[key]) {    
+                        if (!dataByKey[order]) {    
                           dataByKey[order] = []
                           // dataByKey[key]["order"] = order
                         }
@@ -371,6 +371,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           .attr("transform", function(d) { return ( "translate(" + arc.centroid(d) + ")" )})
                           .style("text-anchor", "middle")
                           .style("font-size", 17)
+                          .style("font-family", "Roboto")
                   }
 
                 })
