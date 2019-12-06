@@ -410,7 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           };
                         })
 
-                      console.log(partition(root).descendants())
+                      // console.log(partition(root).descendants())
 
                       const sunburstArea = d3.select("#sunburst").append("svg")
                         .attr("width", 800)
@@ -422,9 +422,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         .data(partition(root).descendants())
                         .enter()
                         .append("path")
-                        .attr("d", sunburstArc)
-                        .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
-                        .attr("stroke", "black")
+                          .attr("d", sunburstArc)
+                          .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
+                          .attr("stroke", "black")
+                            .append("text")
+                            .text(function(d){ 
+                              if (d.parent == null) return null
+                              if (d.children) {
+                                debugger
+                                let key = d.children[0].data.key
+                                return keys[key]
+                              }
+                            })
                         
 
                   }
