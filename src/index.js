@@ -418,6 +418,22 @@ document.addEventListener('DOMContentLoaded', () => {
                         .append("g")
                         .attr("transform", "translate(400, 400)")
                       
+                      // sunburstArea.selectAll("path")
+                      //   .data(partition(root).descendants())
+                      //   .enter()
+                      //   .append("path")
+                      //     .attr("d", sunburstArc)
+                      //     .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
+                      //     .attr("stroke", "black")
+                      //       .append("text")
+                      //       .text(function(d){ 
+                      //         if (d.parent == null) return null
+                      //         if (d.children) {
+                      //           debugger
+                      //           let key = d.children[0].data.key
+                      //           return keys[key]
+                      //         }
+                      //       })
 
                       const sunburst = sunburstArea.selectAll('.path')
                         .data(partition(root).descendants())
