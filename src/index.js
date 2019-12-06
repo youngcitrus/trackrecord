@@ -396,12 +396,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         root.children.push({name: i, children: dataByKey[i], size: dataByKey[i].length})
                       }
 
-                      console.log(root)
+                      console.log("what")
 
                       root = d3.hierarchy(root)
                         .sum(function(d){ 
                           if (d.size) return d.size
-                          else return 20;
+                          else {
+                            let key = keys[d.key]
+                            let order = circleOfFifths.indexOf(key)
+                            if (root.children[order]){
+                              return (root.children[order].size)
+                            }
+                          };
                         })
 
                       console.log(partition(root).descendants())
