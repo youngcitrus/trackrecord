@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       
                       const sunburstX = d3.scaleLinear()
                         .range([0, 2 * Math.PI])
-                      const sunburstY = d3.scaleLinear()
+                      const sunburstY = d3.scaleSqrt()
                         .range([0, 400])
 
                       const partition = d3.partition()
@@ -445,6 +445,30 @@ document.addEventListener('DOMContentLoaded', () => {
                         .attr("d", sunburstArc)
                         .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
                         .attr("stroke", "black")
+                        .on('mouseover', function (d, i) {
+                          d3.select(this).transition()
+                               .duration('50')
+                               .attr('opacity', '.85')
+                        })
+                        .on('mouseout', function (d, i) {
+                          d3.select(this).transition()
+                               .duration('50')
+                               .attr('opacity', '1');
+                        })
+                        .on('click', click)
+
+                        function click(d){
+                          sunburstArea.transition()
+                            .duration(750)
+                            .tween("scales", function() {
+                              let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
+                              let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
+                              let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 20 : 0, 400])
+                              return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
+                            })
+                            .selectAll("path")
+                              .attrTween("d", function(d){return function(){return sunburstArc(d)}})
+                        }
 
 
                       sunburst.append("text")
@@ -461,6 +485,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style("text-anchor", "middle")
                           .style("font-size", 14)
                           .style("font-family", "Roboto")
+
 
                         
 
