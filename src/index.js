@@ -378,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       
                       const sunburstX = d3.scaleLinear()
                         .range([0, 2 * Math.PI])
-                      const sunburstY = d3.scaleSqrt()
+                      const sunburstY = d3.scaleLinear()
                         .range([0, 400])
 
                       const partition = d3.partition()
@@ -446,18 +446,18 @@ document.addEventListener('DOMContentLoaded', () => {
                         .attr("d", sunburstArc)
                         .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
                         .attr("stroke", "black")
-                        .on('mouseover', function (d, i) {
-                          if (d.parent){
-                            d3.select(this).transition()
-                                .duration('50')
-                                .attr('opacity', '.85')
-                          }
-                        })
-                        .on('mouseout', function (d, i) {
-                          d3.select(this).transition()
-                               .duration('50')
-                               .attr('opacity', '1');
-                        })
+                        // .on('mouseover', function (d, i) {
+                        //   if (d.parent){
+                        //     d3.select(this).transition()
+                        //         .duration('50')
+                        //         .attr('opacity', '.85')
+                        //   }
+                        // })
+                        // .on('mouseout', function (d, i) {
+                        //   d3.select(this).transition()
+                        //        .duration('50')
+                        //        .attr('opacity', '1');
+                        // })
                         .on('click', click)
 
                         let level = 0;
@@ -468,14 +468,14 @@ document.addEventListener('DOMContentLoaded', () => {
                             .tween("scales", function() {
                               let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
                               let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
-                              let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 20 : 0, 400])
+                              let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 400])
                               return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
                             })
                             .selectAll("path")
                               .attrTween("d", function(d){return function(){return sunburstArc(d)}})
                           
-                          sunburstArea.selectAll('text')
-                            .text("")
+                          // sunburstArea.selectAll('text')
+                          //   .text("")
 
 
                           if (d3.select('#key-player')) d3.select('#key-player').remove();
@@ -492,26 +492,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             level = 2
                           }
                           console.log(d)
-                          if (d.children && d.parent){
-                            level = 1
-                          }
-                          if (!d.parent && level !== 0){
-                            level = 0
-                            sunburst.append("text")
-                            .text(function(d){ 
-                              if (d.parent === null) return ""
-                              if (d.children) {
-                                // debugger
-                                let key = d.children[0].data.key
-                                return keys[key]
-                              }
-                              else return ""
-                            })
-                            .attr("transform", function(d) { return ( "translate(" + sunburstArc.centroid(d) + ")" )})
-                            // .style("text-anchor", "middle")
-                            .style("font-size", 14)
-                            .style("font-family", "Roboto")
-                          }
+                          
 
                         }
 
