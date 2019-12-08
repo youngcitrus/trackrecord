@@ -418,6 +418,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         .append("g")
                         .attr("transform", "translate(400, 400)")
                       
+                      
                       // sunburstArea.selectAll("path")
                       //   .data(partition(root).descendants())
                       //   .enter()
@@ -446,9 +447,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
                         .attr("stroke", "black")
                         .on('mouseover', function (d, i) {
-                          d3.select(this).transition()
-                               .duration('50')
-                               .attr('opacity', '.85')
+                          if (d.parent){
+                            d3.select(this).transition()
+                                .duration('50')
+                                .attr('opacity', '.85')
+                          }
                         })
                         .on('mouseout', function (d, i) {
                           d3.select(this).transition()
@@ -456,6 +459,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                .attr('opacity', '1');
                         })
                         .on('click', click)
+
+                        let level = 0;
 
                         function click(d){
                           sunburstArea.transition()
@@ -468,14 +473,59 @@ document.addEventListener('DOMContentLoaded', () => {
                             })
                             .selectAll("path")
                               .attrTween("d", function(d){return function(){return sunburstArc(d)}})
+                          
+                          sunburstArea.selectAll('text')
+                            .text("")
+
+
+                          if (d3.select('#key-player')) d3.select('#key-player').remove();
+                          if (!d.children){
+                            let foreignObject = testWindow.append('foreignObject')
+                              .attr('x', 0)
+                              .attr('y', 370)
+                              .attr('width', 448)
+                              .attr('height', 80)
+                            let player = foreignObject.append("xhtml:iframe")
+                              .attr('id', 'key-player')
+                              .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
+                              .attr('allow', 'encrypted-media')
+                            level = 2
+                          }
+                          console.log(d)
+                          if (d.children && d.parent){
+                            level = 1
+                          }
+                          if (!d.parent && level !== 0){
+                            level = 0
+                            sunburst.append("text")
+                            .text(function(d){ 
+                              if (d.parent === null) return ""
+                              if (d.children) {
+                                // debugger
+                                let key = d.children[0].data.key
+                                return keys[key]
+                              }
+                              else return ""
+                            })
+                            .attr("transform", function(d) { return ( "translate(" + sunburstArc.centroid(d) + ")" )})
+                            // .style("text-anchor", "middle")
+                            .style("font-size", 14)
+                            .style("font-family", "Roboto")
+                          }
+
                         }
+
+                      const testWindow = d3.select("#sunburst").append("svg")
+                        .attr("height", 400)
+                        .attr("width", 400)
+                        .attr('x', 800)
 
 
                       sunburst.append("text")
                           .text(function(d){ 
                             if (d.parent === null) return ""
                             if (d.children) {
-                              debugger
+                              // debugger
                               let key = d.children[0].data.key
                               return keys[key]
                             }
@@ -485,6 +535,8 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style("text-anchor", "middle")
                           .style("font-size", 14)
                           .style("font-family", "Roboto")
+
+                      
 
 
                         
