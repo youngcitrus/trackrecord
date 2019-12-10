@@ -328,57 +328,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         dataByKey[order].push(track)
                       })
                       console.log(dataByKey)
-                      // let dataByKeyArray = Object.values(dataByKey)
-                      // console.log(dataByKeyArray)
-
-                      const pie = d3.pie()
-                        .value(function(d) {return d.value.length})
-                        .sort(null)
-                        
-                      const arc = d3.arc()
-                        .innerRadius(300)
-                        .outerRadius(380)
-                      
-                      const labelArc = d3.arc()
-                        .innerRadius(200)
-                        .outerRadius(200)
 
                       let colors = d3.scaleOrdinal()
                         .domain(dataByKey)
                         .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
-
-                      let dataReady = pie(d3.entries(dataByKey))
-
-                      let pieChartArea = d3.select("#pie-chart").append("svg")
-                        .attr("width", 800)
-                        .attr("height", 800)
-                        .append("g")
-                        .attr("transform", "translate(400, 400)")
-                      
-                      const g = pieChartArea.selectAll('.arc')
-                        .data(dataReady)
-                        .enter()
-                        .append('g')
-                          .attr('class', 'arc')
-                      g.append('path')
-                        .attr('d', arc)
-                        .attr('fill', function(d){ return(colors(d.data.key)) })
-                        .attr("stroke", "black")
-                        .style("stroke-width", "2px")
-                        .style("opacity", 0.7)
-                      g.append("text")
-                          .text(function(d){return circleOfFifths[d.data.key]})
-                          .attr("transform", function(d) { return ( "translate(" + arc.centroid(d) + ")" )})
-                          .style("text-anchor", "middle")
-                          .style("font-size", 17)
-                          .style("font-family", "Roboto")
 
 
                       console.log('testing')
                       
                       const sunburstX = d3.scaleLinear()
                         .range([0, 2 * Math.PI])
-                      const sunburstY = d3.scaleLinear()
+                      const sunburstY = d3.scaleSqrt()
                         .range([0, 400])
 
                       const partition = d3.partition()
@@ -391,23 +351,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                       let sunburstColors = d3.scaleOrdinal(d3.schemeCategory20c)
 
-                      let root = {name: "dataByKey", children: []}
+                      let root = {children: []}
                       for (let i=0; i < 12; i++){
-                        root.children.push({name: i, children: dataByKey[i], size: dataByKey[i].length})
+                        root.children.push({name: i, children: dataByKey[i], size: dataByKey[i].length })
                       }
+                      root.children.forEach(child => {
+                        child.children.forEach(track => {track.size = sunburstY(child.size)})
+                      })
 
-                      console.log("what")
+                      console.log(root)
 
                       root = d3.hierarchy(root)
                         .sum(function(d){ 
                           if (d.size) return d.size
-                          else {
-                            let key = keys[d.key]
-                            let order = circleOfFifths.indexOf(key)
-                            if (root.children[order]){
-                              return (root.children[order].size)
-                            }
-                          };
+                          // else {
+                          //   let key = keys[d.key]
+                          //   let order = circleOfFifths.indexOf(key)
+                          //   if (root.children[order]){
+                          //     return (sunburstY(root.children[order].size))
+                          //   }
+                          // };
                         })
 
                       // console.log(partition(root).descendants())
@@ -418,24 +381,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         .append("g")
                         .attr("transform", "translate(400, 400)")
                       
-                      // sunburstArea.selectAll("path")
-                      //   .data(partition(root).descendants())
-                      //   .enter()
-                      //   .append("path")
-                      //     .attr("d", sunburstArc)
-                      //     .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
-                      //     .attr("stroke", "black")
-                      //       .append("text")
-                      //       .text(function(d){ 
-                      //         if (d.parent == null) return null
-                      //         if (d.children) {
-                      //           debugger
-                      //           let key = d.children[0].data.key
-                      //           return keys[key]
-                      //         }
-                      //       })
 
                       const sunburst = sunburstArea.selectAll('.path')
+                        // .data(partition(root).descendants().slice(1))
                         .data(partition(root).descendants())
                         .enter()
                         .append("g")
@@ -443,15 +391,198 @@ document.addEventListener('DOMContentLoaded', () => {
                          
                       sunburst.append('path')    
                         .attr("d", sunburstArc)
-                        .style("fill", function(d){ return sunburstColors((d.children ? d : d.parent).data.name) })
+                        .style("fill", function(d){ 
+                          if (!d.parent) return "white"
+                          return sunburstColors((d.children ? d : d.parent).data.name)
+                        })
                         .attr("stroke", "black")
+                        .attr("stroke-opacity", "0.5")
+                        .attr("class", "selectors")
+                        
+                        // .on('mouseover', function (d, i) {
+                        //   if (d.parent){
+                        //     d3.select(this).transition()
+                        //         .duration('50')
+                        //         .attr('opacity', '.85')
+                        //   }
+                        // })
+                        // .on('mouseout', function (d, i) {
+                        //   d3.select(this).transition()
+                        //        .duration('50')
+                        //        .attr('opacity', '1');
+                        // })
+                        .on('click', click)
+
+                        
+                        let level = 0
+
+                        function click(d){
+                          if (d3.event.shiftKey) console.log("hmmm")
+                          sunburstArea.transition()
+                            .duration(750)
+                            .tween("scales", function() {
+                              let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
+                              let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
+                              let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 400])
+                              return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
+                            })
+                            .selectAll("path")
+                              .attrTween("d", function(d){return function(){return sunburstArc(d)}})
+
+
+                          if (d3.select('#key-player')) d3.select('#key-player').remove();
+                          if (!d.children){
+                            
+                            
+
+                            level = 2 
+                            sunburstArea.selectAll('text')
+                              .remove()
+
+                            let foreignObject = testWindow.append('foreignObject')
+                              .attr('x', 0)
+                              .attr('y', 0)
+                              .attr('width', 448)
+                              .attr('height', 80)
+                            let player = foreignObject.append("xhtml:iframe")
+                              .attr('id', 'key-player')
+                              .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
+                              .attr('allow', 'encrypted-media')
+                            
+                            sunburstArea.selectAll('path')
+                              .attr("stroke-width", function(data){
+                                return (data.children) ? 1 : 0
+                            })
+
+                            request.post(authOptions, function(error, response, body){
+                              if (!error && response.statusCode === 200){
+                                let token = body.access_token;
+                                let options = {
+                                  url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + d.data.id,
+                                  headers: {
+                                    'Authorization': 'Bearer ' + token
+                                  },
+                                  json: true
+                                };
+
+                                request.get(options, function(error, response, body){
+                                  console.log(body)
+                                })
+
+                              }
+                            })     
+                            
+                          }
+
+                          if (d.children && d.parent && level !== 1){
+                            level = 1
+                            sunburstArea.selectAll('text')
+                              .remove()
+                            sunburstArea.selectAll('path')
+                              .attr("stroke-width", function(data){
+                                return (data.parent && data.children) ? 0 : 1
+                              })
+                              d3.selectAll('.selectors').on('click',function(){
+                                //Remove the currently clicked element from the selection.
+                                d3.select(this).on('click',null);
+                              });
+                            setTimeout(function(){
+                              request.post(authOptions, function(error, response, body){
+                                if (!error && response.statusCode === 200){
+                                  let token = body.access_token;
+                                  let successTrack = 0
+                                  d.children.forEach((track, index) => {
+                                    let options = {
+                                      url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
+                                      headers: {
+                                        'Authorization': 'Bearer ' + token
+                                      },
+                                      json: true
+                                    };
+                                    
+                                    request.get(options, function(error, response, body){
+                                      let translateX = index / d.children.length * 300
+                                      let translateY = index / d.children.length * 300
+                                      // let rotation = rotation = -90 + (index / d.children.length) * 360
+                                      let rotation
+                                      if (index < d.children.length / 2 - 1) rotation = -90 + (2 * index / d.children.length) * 180
+                                      else {
+                                        newIndex = index - d.children.length/2
+                                        rotation = -90 + (2 * newIndex / d.children.length) * 180
+                                      }
+                                      
+                                      let artistNameTrack = body.artists[0].name
+                                      if (artistNameTrack.length > 17) artistNameTrack = artistNameTrack.slice(0, 17) + "..."
+
+                                      sunburstArea.append("text")
+                                        .text(artistNameTrack)
+                                        .attr("transform", function() {
+                                          return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
+                                        })
+                                        .style("text-anchor", "middle")
+                                        .style("font-size", 14)
+                                        .style("opacity", "0")
+                                        .style("font-family", "Roboto")
+                                          .transition()
+                                          .duration(100)
+                                          .style('opacity', "1")
+                                      console.log('nani')
+                                      successTrack += 1
+                                      if (successTrack === d.children.length) {
+                                        d3.selectAll('.selectors').on('click', click)
+                                      }
+                                    })
+                                  })
+                                }
+                              })
+                            }, 750)
+                          }
+                              
+                          if (!d.parent && level !== 0){
+                            level = 0
+                            sunburstArea.selectAll('text')
+                              .remove()
+                            console.log(level)
+                            setTimeout(function(){
+                              sunburstArea.selectAll('path')
+                                  .attr("stroke-width", 1)
+                            }, 600)
+                            setTimeout(function(){
+                              sunburst.append('text')
+                                .text(function(data){ 
+                                  if (data.parent === null) return ""
+                                  if (data.children) {
+                                    // debugger
+                                    let key = data.children[0].data.key
+                                    return keys[key]
+                                  }
+                                  else return ""
+                                })
+                                .attr("transform", function(data) { return ( "translate(" + sunburstArc.centroid(data) + ")" )})
+                                .style("text-anchor", "middle")
+                                .style("font-size", 14)
+                                .style("font-family", "Roboto")
+
+                            }, 800)
+
+                            
+                          }
+                          console.log(d)
+                          
+
+                        }
+
+                      const testWindow = d3.select("#sunburst").append("svg")
+                        .attr("height", 400)
+                        .attr("width", 400)
+                        .attr('x', 800)
 
 
                       sunburst.append("text")
                           .text(function(d){ 
                             if (d.parent === null) return ""
                             if (d.children) {
-                              debugger
+                              // debugger
                               let key = d.children[0].data.key
                               return keys[key]
                             }
@@ -461,6 +592,9 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style("text-anchor", "middle")
                           .style("font-size", 14)
                           .style("font-family", "Roboto")
+
+                      
+
 
                         
 
