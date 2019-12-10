@@ -315,6 +315,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             return graphHeight - d.danceability * 800
                           })
                       
+
+                      
                       let dataByKey = {};
                       const keys = ["C", "Db/C#", "D", "Eb", "E", "F", "Gb/F#", "G", "Ab", "A", "Bb", "B"]
                       const circleOfFifths = ["C", "G", "D", "A", "E", "B", "Gb/F#", "Db/C#", "Ab", "Eb", "Bb", "F"]
@@ -328,6 +330,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         dataByKey[order].push(track)
                       })
                       console.log(dataByKey)
+
+
 
                       let colors = d3.scaleOrdinal()
                         .domain(dataByKey)
@@ -392,92 +396,80 @@ document.addEventListener('DOMContentLoaded', () => {
                       sunburst.append('path')    
                         .attr("d", sunburstArc)
                         .style("fill", function(d){ 
-                          if (!d.parent) return "white"
+                          if (!d.parent) return "black"
                           return sunburstColors((d.children ? d : d.parent).data.name)
                         })
+                        .attr('id', function(d){
+                          if (!d.parent) return 'root-level'
+                        })
+                        .style('opacity', function(d){ if (!d.parent) return 0; else return 1})
                         .attr("stroke", "black")
                         .attr("stroke-opacity", "0.5")
                         .attr("class", "selectors")
                         
-                        // .on('mouseover', function (d, i) {
-                        //   if (d.parent){
-                        //     d3.select(this).transition()
-                        //         .duration('50')
-                        //         .attr('opacity', '.85')
-                        //   }
-                        // })
-                        // .on('mouseout', function (d, i) {
-                        //   d3.select(this).transition()
-                        //        .duration('50')
-                        //        .attr('opacity', '1');
-                        // })
                         .on('click', click)
 
                         
                         let level = 0
 
                         function click(d){
-                          if (d3.event.shiftKey) console.log("hmmm")
-                          sunburstArea.transition()
-                            .duration(750)
-                            .tween("scales", function() {
-                              let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
-                              let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
-                              let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 400])
-                              return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
-                            })
-                            .selectAll("path")
-                              .attrTween("d", function(d){return function(){return sunburstArc(d)}})
-
 
                           if (d3.select('#key-player')) d3.select('#key-player').remove();
+                          if (d3.select('#key-image')) d3.select('#key-image').remove();
                           if (!d.children){
-                            
-                            
 
-                            level = 2 
-                            sunburstArea.selectAll('text')
-                              .remove()
 
                             let foreignObject = testWindow.append('foreignObject')
-                              .attr('x', 0)
-                              .attr('y', 0)
-                              .attr('width', 448)
+                              // .attr('x', -40)
+                              // .attr('y', 80)
+                              .attr('width', 80)
                               .attr('height', 80)
                             let player = foreignObject.append("xhtml:iframe")
                               .attr('id', 'key-player')
                               .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                               .attr('allow', 'encrypted-media')
+                              .style('border-radius','20px')
                             
-                            sunburstArea.selectAll('path')
-                              .attr("stroke-width", function(data){
-                                return (data.children) ? 1 : 0
-                            })
-
-                            request.post(authOptions, function(error, response, body){
-                              if (!error && response.statusCode === 200){
-                                let token = body.access_token;
-                                let options = {
-                                  url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + d.data.id,
-                                  headers: {
-                                    'Authorization': 'Bearer ' + token
-                                  },
-                                  json: true
-                                };
-
-                                request.get(options, function(error, response, body){
-                                  console.log(body)
-                                })
-
-                              }
-                            })     
+                            // sunburstArea.selectAll('path')
+                            //   .attr("stroke-width", function(data){
+                            //     return (data.children) ? 1 : 0
+                            // })    
                             
                           }
 
                           if (d.children && d.parent && level !== 1){
+                            d3.select('#root-level').style('fill',sunburstColors(d.data.name)).style('opacity', 1).style('stroke-width','0')
+                            sunburstArea.transition()
+                              .duration(650)
+                              .tween("scales", function() {
+                                let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
+                                let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
+                                let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 400])
+                                return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
+                              })
+                              .selectAll("path")
+                                .attrTween("d", function(d){return function(){return sunburstArc(d)}})
+
                             level = 1
                             sunburstArea.selectAll('text')
                               .remove()
+
+                            sunburstArea.append('text')
+                              .text(keys[d.children[0].data.key])
+                              .attr('x', -5)
+                              .attr('y', -200)
+                              .style('font-family', 'Roboto')
+                              .style('font-size', 20)
+
+                            sunburstArea.append('text')
+                              .text('back')
+                              .attr('x', -5)
+                              .attr('y', 200)
+                              .style('cursor', 'default')
+                              .on('click', function(){
+                                d3.select('#root-level').dispatch('click');
+                              });
+
                             sunburstArea.selectAll('path')
                               .attr("stroke-width", function(data){
                                 return (data.parent && data.children) ? 0 : 1
@@ -501,15 +493,23 @@ document.addEventListener('DOMContentLoaded', () => {
                                     };
                                     
                                     request.get(options, function(error, response, body){
-                                      let translateX = index / d.children.length * 300
-                                      let translateY = index / d.children.length * 300
+                                      // let translateX = index / d.children.length * 300
+                                      // let translateY = index / d.children.length * 300
                                       // let rotation = rotation = -90 + (index / d.children.length) * 360
                                       let rotation
-                                      if (index < d.children.length / 2 - 1) rotation = -90 + (2 * index / d.children.length) * 180
+                                      
+                                      if (index < d.children.length / 2) rotation = -90 + (2 * index / d.children.length) * 180
                                       else {
                                         newIndex = index - d.children.length/2
+
                                         rotation = -90 + (2 * newIndex / d.children.length) * 180
                                       }
+                                      console.log(body)
+                                      track.name = body.name
+                                      track.artists = []
+                                      body.artists.forEach(artist => {track.artists.push(artist.name)})
+                                      track.albumName = body.album.name
+                                      track.releaseDate = body.album.release_date
                                       
                                       let artistNameTrack = body.artists[0].name
                                       if (artistNameTrack.length > 17) artistNameTrack = artistNameTrack.slice(0, 17) + "..."
@@ -526,7 +526,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                           .transition()
                                           .duration(100)
                                           .style('opacity', "1")
-                                      console.log('nani')
                                       successTrack += 1
                                       if (successTrack === d.children.length) {
                                         d3.selectAll('.selectors').on('click', click)
@@ -535,14 +534,26 @@ document.addEventListener('DOMContentLoaded', () => {
                                   })
                                 }
                               })
-                            }, 750)
+                            }, 650)
                           }
                               
                           if (!d.parent && level !== 0){
+                            d3.select('#root-level').style('fill', 'white' )
                             level = 0
+                            sunburstArea.transition()
+                              .duration(650)
+                              .tween("scales", function() {
+                                let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
+                                let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
+                                let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 400])
+                                return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
+                              })
+                              .selectAll("path")
+                                .attrTween("d", function(d){return function(){return sunburstArc(d)}})
+
                             sunburstArea.selectAll('text')
                               .remove()
-                            console.log(level)
+                            
                             setTimeout(function(){
                               sunburstArea.selectAll('path')
                                   .attr("stroke-width", 1)
@@ -565,6 +576,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             }, 800)
 
+
+
                             
                           }
                           console.log(d)
@@ -572,10 +585,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         }
 
-                      const testWindow = d3.select("#sunburst").append("svg")
+                      const testWindow = sunburstArea.append("svg")
                         .attr("height", 400)
                         .attr("width", 400)
-                        .attr('x', 800)
+                        .attr('x', -40)
+                        .attr('y', -40)
 
 
                       sunburst.append("text")
