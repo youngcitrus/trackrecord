@@ -368,16 +368,8 @@ document.addEventListener('DOMContentLoaded', () => {
                       root = d3.hierarchy(root)
                         .sum(function(d){ 
                           if (d.size) return d.size
-                          // else {
-                          //   let key = keys[d.key]
-                          //   let order = circleOfFifths.indexOf(key)
-                          //   if (root.children[order]){
-                          //     return (sunburstY(root.children[order].size))
-                          //   }
-                          // };
                         })
 
-                      // console.log(partition(root).descendants())
 
                       const sunburstArea = d3.select("#sunburst").append("svg")
                         .attr("width", 800)
@@ -387,7 +379,6 @@ document.addEventListener('DOMContentLoaded', () => {
                       
 
                       const sunburst = sunburstArea.selectAll('.path')
-                        // .data(partition(root).descendants().slice(1))
                         .data(partition(root).descendants())
                         .enter()
                         .append("g")
@@ -405,23 +396,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         .style('opacity', function(d){ if (!d.parent) return 0; else return 1})
                         .attr("stroke", "black")
                         .attr("stroke-opacity", "0.5")
-                        .attr("class", "selectors")
-                        
+                        .attr("class", function(d){
+                          if (d.parent && d.children) return "selectors key-level"
+                          else return "selectors"
+                        })
                         .on('click', click)
 
                         
                         let level = 0
 
+
+
                         function click(d){
 
                           if (d3.select('#key-player')) d3.select('#key-player').remove();
-                          if (d3.select('#key-image')) d3.select('#key-image').remove();
+                          
                           if (!d.children){
 
-
                             let foreignObject = testWindow.append('foreignObject')
-                              // .attr('x', -40)
-                              // .attr('y', 80)
                               .attr('width', 80)
                               .attr('height', 80)
                             let player = foreignObject.append("xhtml:iframe")
@@ -429,15 +421,16 @@ document.addEventListener('DOMContentLoaded', () => {
                               .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                               .attr('allow', 'encrypted-media')
                               .style('border-radius','20px')
-                            
-                            // sunburstArea.selectAll('path')
-                            //   .attr("stroke-width", function(data){
-                            //     return (data.children) ? 1 : 0
-                            // })    
+                               
                             
                           }
 
                           if (d.children && d.parent && level !== 1){
+                            level = 1
+                            
+                            d3.selectAll(".key-level").classed("no-hover", true)
+
+
                             d3.select('#root-level').style('fill',sunburstColors(d.data.name)).style('opacity', 1).style('stroke-width','0')
                             sunburstArea.transition()
                               .duration(650)
@@ -450,22 +443,23 @@ document.addEventListener('DOMContentLoaded', () => {
                               .selectAll("path")
                                 .attrTween("d", function(d){return function(){return sunburstArc(d)}})
 
-                            level = 1
+                            
                             sunburstArea.selectAll('text')
                               .remove()
 
                             sunburstArea.append('text')
                               .text(keys[d.children[0].data.key])
-                              .attr('x', -5)
+                              .attr('x', -5 - 4*(keys[d.children[0].data.key].length - 1))
                               .attr('y', -200)
                               .style('font-family', 'Roboto')
                               .style('font-size', 20)
 
                             sunburstArea.append('text')
                               .text('back')
-                              .attr('x', -5)
+                              .attr('x', -14)
                               .attr('y', 200)
                               .style('cursor', 'default')
+                              .style('font-family', 'Roboto')
                               .on('click', function(){
                                 d3.select('#root-level').dispatch('click');
                               });
@@ -473,73 +467,112 @@ document.addEventListener('DOMContentLoaded', () => {
                             sunburstArea.selectAll('path')
                               .attr("stroke-width", function(data){
                                 return (data.parent && data.children) ? 0 : 1
-                              })
-                              d3.selectAll('.selectors').on('click',function(){
-                                //Remove the currently clicked element from the selection.
-                                d3.select(this).on('click',null);
                               });
-                            setTimeout(function(){
-                              request.post(authOptions, function(error, response, body){
-                                if (!error && response.statusCode === 200){
-                                  let token = body.access_token;
-                                  let successTrack = 0
-                                  d.children.forEach((track, index) => {
-                                    let options = {
-                                      url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
-                                      headers: {
-                                        'Authorization': 'Bearer ' + token
-                                      },
-                                      json: true
-                                    };
-                                    
-                                    request.get(options, function(error, response, body){
-                                      // let translateX = index / d.children.length * 300
-                                      // let translateY = index / d.children.length * 300
-                                      // let rotation = rotation = -90 + (index / d.children.length) * 360
-                                      let rotation
-                                      
-                                      if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
-                                      else {
-                                        newIndex = index - d.children.length/2
 
-                                        rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
-                                      }
-                                      console.log(body)
-                                      track.name = body.name
-                                      track.artists = []
-                                      body.artists.forEach(artist => {track.artists.push(artist.name)})
-                                      track.albumName = body.album.name
-                                      track.releaseDate = body.album.release_date
-                                      
-                                      let artistNameTrack = body.artists[0].name
-                                      if (artistNameTrack.length > 17) artistNameTrack = artistNameTrack.slice(0, 17) + "..."
+                            d3.selectAll('.selectors').on('click',function(){
+                              d3.select(this).on('click',null);
+                            });
 
-                                      sunburstArea.append("text")
-                                        .text(artistNameTrack)
-                                        .attr("transform", function() {
-                                          return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
-                                        })
-                                        .style("text-anchor", "middle")
-                                        .style("font-size", 14)
-                                        .style("opacity", "0")
-                                        .style("font-family", "Roboto")
-                                          .transition()
-                                          .duration(100)
-                                          .style('opacity', "1")
-                                      successTrack += 1
-                                      if (successTrack === d.children.length) {
-                                        d3.selectAll('.selectors').on('click', click)
-                                      }
+                            if (!d.loaded){
+                              setTimeout(function(){
+                                request.post(authOptions, function(error, response, body){
+                                  if (!error && response.statusCode === 200){
+                                    let token = body.access_token;
+                                    let successTrack = 0
+                                    d.children.forEach((track, index) => {
+                                      let options = {
+                                        url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
+                                        headers: {
+                                          'Authorization': 'Bearer ' + token
+                                        },
+                                        json: true
+                                      };
+                                      
+                                      request.get(options, function(error, response, body){
+
+                                        let rotation
+                                        
+                                        if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
+                                        else {
+                                          newIndex = index - d.children.length/2
+
+                                          rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
+                                        }
+                                        console.log(body)
+                                        track.name = body.name
+                                        track.artists = []
+                                        body.artists.forEach(artist => {track.artists.push(artist.name)})
+                                        track.firstArtist = track.artists[0]
+                                        track.albumName = body.album.name
+                                        track.releaseDate = body.album.release_date
+                                        
+                                        let artistNameTrack = body.artists[0].name
+                                        if (artistNameTrack.length > 17) {
+                                          artistNameTrack = artistNameTrack.slice(0, 17) + "..."
+                                          track.firstArtist = track.firstArtist.slice(0, 17) + "..."
+                                        }
+                                        sunburstArea.append("text")
+                                          .text(artistNameTrack)
+                                          .attr("transform", function() {
+                                            return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
+                                          })
+                                          .style("text-anchor", "middle")
+                                          .style("font-size", 14)
+                                          .style("opacity", "0")
+                                          .attr("class", "key-text")
+                                          .style("font-family", "Roboto")
+                                            .transition()
+                                            .duration(100)
+                                            .style('opacity', "1")
+                                        successTrack += 1
+                                        if (successTrack === d.children.length) {
+                                          d3.selectAll('.selectors').on('click', click)
+                                          d.loaded = true;
+                                        }
+                                      })
                                     })
-                                  })
-                                }
-                              })
-                            }, 650)
+                                  }
+                                })
+                              }, 650)
+                            } else {
+                              d3.selectAll('.selectors').on('click', click)
+                              
+                              setTimeout(function(){
+                                d.children.forEach((track, index) => {
+                                  let rotation
+                                  if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
+                                  else {
+                                    newIndex = index - d.children.length/2
+
+                                    rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
+                                  }
+                                  sunburstArea.append("text")
+                                          .text(track.firstArtist)
+                                          .attr("transform", function() {
+                                            return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
+                                          })
+                                          .style("text-anchor", "middle")
+                                          .style("font-size", 14)
+                                          .style("opacity", "0")
+                                          .attr("class", "key-text")
+                                          .style("font-family", "Roboto")
+                                            .transition()
+                                            .duration(100)
+                                            .style('opacity', "1")
+
+                                })
+                              }, 700)
+                              console.log('poop')
+                            }
+
                           }
                               
                           if (!d.parent && level !== 0){
-                            d3.select('#root-level').style('fill', 'white' )
+
                             level = 0
+                            d3.selectAll(".key-level").classed("no-hover", false)
+
+                            d3.select('#root-level').style('fill', 'white' )
                             sunburstArea.transition()
                               .duration(650)
                               .tween("scales", function() {
@@ -573,6 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 .style("text-anchor", "middle")
                                 .style("font-size", 14)
                                 .style("font-family", "Roboto")
+                                .attr("class", "key-text")
 
                             }, 800)
 
@@ -606,11 +640,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style("text-anchor", "middle")
                           .style("font-size", 14)
                           .style("font-family", "Roboto")
-
-                      
-
-
-                        
+                          .attr("class", "key-text")
 
                   }
 
@@ -620,7 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
               }
 
               fetchAllTracks(trackIds);
-
+              console.log('yo what')
             }
 
           });

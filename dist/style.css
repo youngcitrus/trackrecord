@@ -71,3 +71,14 @@ iframe {
     border-radius: 5px;
 }
 
+.path:hover{
+	opacity: 0.75;
+}
+
+.no-hover{
+	pointer-events: none;
+}
+
+.key-text{
+	pointer-events: none;
+}
