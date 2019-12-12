@@ -5,7 +5,11 @@ const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
 
 document.addEventListener('DOMContentLoaded', () => {
   console.log('hi');
-
+  document.getElementById('nav-1').addEventListener('click', function(){
+    console.log('hmmmmm')
+    $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
+    return false;
+  })
   //request auth token from Spotify API
 
   const authOptions = {
@@ -578,7 +582,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             level = 0
                             if (d3.select('#key-player')) d3.select('#key-player').remove();
-                            
+
                             d3.selectAll(".key-level").classed("no-hover", false)
 
                             d3.select('#root-level').style('fill', 'white' )

@@ -26,6 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
+	/* overflow: hidden; */
 }
 ol, ul {
 	list-style: none;
@@ -53,18 +54,24 @@ svg {
     border: solid 1px black;
 }
 
-#test {
-    color: blue;
+#nav-1 {
+	color: blue;
+	height: 20px;
 }
 
 #main{
-    width: 900px;
+	width: 900px;
+	height: 450px;
 }
 
 #main-container{
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+	align-items: center;
+	justify-content: center;
 }
 
 iframe {
@@ -106,3 +113,4 @@ iframe {
 #sunburst{
 	width: 800px;
 }
+
