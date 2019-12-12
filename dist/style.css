@@ -82,3 +82,17 @@ iframe {
 .key-text{
 	pointer-events: none;
 }
+
+#loading-spin{
+	border: 5px solid #f3f3f3; /* Light grey */
+	border-top: 5px solid #9a9a9a; /* Blue */
+	border-radius: 50%;
+	width: 17.5px;
+	height: 17.5px;
+	animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}

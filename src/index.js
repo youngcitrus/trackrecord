@@ -420,18 +420,16 @@ document.addEventListener('DOMContentLoaded', () => {
                               .attr('id', 'key-player')
                               .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                               .attr('allow', 'encrypted-media')
-                              .style('border-radius','20px')
-                               
-                            
+                              .style('border-radius','20px')              
                           }
 
                           if (d.children && d.parent && level !== 1){
                             level = 1
                             
                             d3.selectAll(".key-level").classed("no-hover", true)
+                            d3.select("#root-level").classed("no-hover", true)
 
-
-                            d3.select('#root-level').style('fill',sunburstColors(d.data.name)).style('opacity', 1).style('stroke-width','0')
+                            d3.select('#root-level').style('fill',sunburstColors(d.data.name)).style('opacity', 1).attr('stroke', sunburstColors(d.data.name))
                             sunburstArea.transition()
                               .duration(650)
                               .tween("scales", function() {
@@ -449,14 +447,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             sunburstArea.append('text')
                               .text(keys[d.children[0].data.key])
-                              .attr('x', -5 - 4*(keys[d.children[0].data.key].length - 1))
+                              .attr('x', -7 - 4*(keys[d.children[0].data.key].length - 1))
                               .attr('y', -200)
                               .style('font-family', 'Roboto')
                               .style('font-size', 20)
 
                             sunburstArea.append('text')
                               .text('back')
-                              .attr('x', -14)
+                              .attr('x', -18)
                               .attr('y', 200)
                               .style('cursor', 'default')
                               .style('font-family', 'Roboto')
@@ -475,6 +473,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             if (!d.loaded){
                               setTimeout(function(){
+                                let foreignDiv = sunburstArea.append('foreignObject')
+                                  .attr('x', -14)
+                                  .attr('y', -14)
+                                  .attr('width', 35)
+                                  .attr('height', 35)
+                                
+                                let loading = foreignDiv.append('xhtml:div')
+                                  .attr('id', 'loading-spin')
+
                                 request.post(authOptions, function(error, response, body){
                                   if (!error && response.statusCode === 200){
                                     let token = body.access_token;
@@ -528,6 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         if (successTrack === d.children.length) {
                                           d3.selectAll('.selectors').on('click', click)
                                           d.loaded = true;
+                                          loading.remove();
                                         }
                                       })
                                     })
