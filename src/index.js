@@ -405,13 +405,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         let level = 0
 
-
-
                         function click(d){
-
-                          if (d3.select('#key-player')) d3.select('#key-player').remove();
                           
                           if (!d.children){
+
+                            if (d3.select('#key-player')) d3.select('#key-player').remove();
 
                             let foreignObject = testWindow.append('foreignObject')
                               .attr('width', 80)
@@ -425,6 +423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                           if (d.children && d.parent && level !== 1){
                             level = 1
+                            if (d3.select('#key-player')) d3.select('#key-player').remove();
                             
                             d3.selectAll(".key-level").classed("no-hover", true)
                             d3.select("#root-level").classed("no-hover", true)
@@ -578,6 +577,8 @@ document.addEventListener('DOMContentLoaded', () => {
                           if (!d.parent && level !== 0){
 
                             level = 0
+                            if (d3.select('#key-player')) d3.select('#key-player').remove();
+                            
                             d3.selectAll(".key-level").classed("no-hover", false)
 
                             d3.select('#root-level').style('fill', 'white' )

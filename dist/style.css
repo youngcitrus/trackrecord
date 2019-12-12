@@ -96,3 +96,13 @@ iframe {
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
 }
+
+#sunburst-container{
+	display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+#sunburst{
+	width: 800px;
+}
