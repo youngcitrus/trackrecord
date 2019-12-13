@@ -83,6 +83,18 @@ svg {
 	margin: 0 auto;
 }
 
+#nav-2 {
+	color: blue;
+	height: max-content;
+	position: absolute;
+	bottom: 100;
+}
+
+#nav-2 p{
+	width: max-content;
+	margin: 0 auto;
+}
+
 #main{
 	width: 900px;
 	height: 450px;
@@ -96,6 +108,7 @@ svg {
     display: flex;
 	align-items: center;
 	justify-content: center;
+	position: relative;
 }
 
 iframe {
@@ -139,7 +152,7 @@ iframe {
 }
 
 #sunburst{
-	width: 800px;
-	height: 800px;
+	width: 700px;
+	height: 700px;
 }
 
