@@ -51,7 +51,7 @@ div {
 }
 
 svg {
-    border: solid 1px black;
+    /* border: solid 1px black; */
 }
 
 #landing{
@@ -75,10 +75,22 @@ svg {
 	color: blue;
 	height: max-content;
 	position: absolute;
-	bottom: 100;
+	bottom: 50;
 }
 
 #nav-1 p{
+	width: max-content;
+	margin: 0 auto;
+}
+
+#prev-1 {
+	color: blue;
+	height: max-content;
+	position: absolute;
+	top: 50;
+}
+
+#prev-1 p{
 	width: max-content;
 	margin: 0 auto;
 }
@@ -87,13 +99,15 @@ svg {
 	color: blue;
 	height: max-content;
 	position: absolute;
-	bottom: 100;
+	bottom: 50;
 }
 
 #nav-2 p{
 	width: max-content;
 	margin: 0 auto;
 }
+
+
 
 #main{
 	width: 900px;
@@ -109,6 +123,7 @@ svg {
 	align-items: center;
 	justify-content: center;
 	position: relative;
+	font-family: 'Roboto'
 }
 
 iframe {

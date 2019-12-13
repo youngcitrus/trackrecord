@@ -43,11 +43,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nav1 = document.createElement("p")
         nav1.textContent = "start here";
+
         document.getElementById("nav-1").appendChild(nav1);
 
         nav1.addEventListener('click', function(){
           console.log('hmmmmm')
           $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
+          return false;
+        })
+
+        const prev1Icon = document.getElementById("prev-1-icon");
+        const prev1 = document.createElement("i");
+        prev1.setAttribute("class", "fas fa-angle-up")
+        prev1Icon.appendChild(prev1)
+        prev1Icon.addEventListener('click', function(){
+          console.log('hmmmmm')
+          $('html, body').animate({ scrollTop: $('#landing').offset().top }, 'slow');
           return false;
         })
 
@@ -233,12 +244,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     console.log(allAudioFeatures)
                       
-                    const nav2 = document.createElement("p")
-                    nav2.textContent = "start here";
-                    document.getElementById("nav-2").appendChild(nav2);
+                    const nav2 = document.createElement("i")
+                    nav2.setAttribute("class","fas fa-angle-down");
+                    nav2.setAttribute("onClick", "scroll1()")
+                    nav2Icon = document.getElementById("nav-2-icon")
+                    nav2Icon.appendChild(nav2);
 
-                    nav2.addEventListener('click', function(){
-                      $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
+                    nav2Icon.addEventListener('click', function(){
+                      $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
                       return false;
                     })
 
