@@ -450,14 +450,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             sunburstArea.append('text')
                               .text(keys[d.children[0].data.key])
-                              .attr('x', -7 - 4*(keys[d.children[0].data.key].length - 1))
+                              .attr('x', -7 - 4.5*(keys[d.children[0].data.key].length - 1))
                               .attr('y', -200)
                               .style('font-family', 'Roboto')
                               .style('font-size', 20)
 
                             sunburstArea.append('text')
                               .text('back')
-                              .attr('x', -18)
+                              .attr('x', -17)
                               .attr('y', 200)
                               .style('cursor', 'default')
                               .style('font-family', 'Roboto')

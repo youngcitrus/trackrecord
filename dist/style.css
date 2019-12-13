@@ -54,9 +54,33 @@ svg {
     border: solid 1px black;
 }
 
+#landing{
+	position: relative;
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+	font-family: 'Roboto'
+}
+
+#about-me{
+	height: max-content;
+	width: 800px;
+}
+
 #nav-1 {
 	color: blue;
-	height: 20px;
+	height: max-content;
+	position: absolute;
+	bottom: 100;
+}
+
+#nav-1 p{
+	width: max-content;
+	margin: 0 auto;
 }
 
 #main{
@@ -105,12 +129,17 @@ iframe {
 }
 
 #sunburst-container{
-	display: flex;
-    flex-direction: row;
-    justify-content: center;
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 #sunburst{
 	width: 800px;
+	height: 800px;
 }
 
