@@ -71,38 +71,26 @@ svg {
 	width: 800px;
 }
 
-#nav-1 {
+.nav {
 	color: blue;
 	height: max-content;
 	position: absolute;
 	bottom: 50;
 }
 
-#nav-1 p{
+.nav p{
 	width: max-content;
 	margin: 0 auto;
 }
 
-#prev-1 {
+.prev {
 	color: blue;
 	height: max-content;
 	position: absolute;
 	top: 50;
 }
 
-#prev-1 p{
-	width: max-content;
-	margin: 0 auto;
-}
-
-#nav-2 {
-	color: blue;
-	height: max-content;
-	position: absolute;
-	bottom: 50;
-}
-
-#nav-2 p{
+.prev p{
 	width: max-content;
 	margin: 0 auto;
 }
@@ -160,7 +148,8 @@ iframe {
 	display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
-    display: -webkit-flex;
+	display: -webkit-flex;
+	position: relative;
     display: flex;
 	align-items: center;
 	justify-content: center;
@@ -171,3 +160,18 @@ iframe {
 	height: 700px;
 }
 
+#scatterplot-container{
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+	display: -webkit-flex;
+	position: relative;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#scatterplot{
+	width: 700px;
+	height: 700px;
+}

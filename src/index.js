@@ -47,7 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById("nav-1").appendChild(nav1);
 
         nav1.addEventListener('click', function(){
-          console.log('hmmmmm')
           $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
           return false;
         })
@@ -57,7 +56,6 @@ document.addEventListener('DOMContentLoaded', () => {
         prev1.setAttribute("class", "fas fa-angle-up")
         prev1Icon.appendChild(prev1)
         prev1Icon.addEventListener('click', function(){
-          console.log('hmmmmm')
           $('html, body').animate({ scrollTop: $('#landing').offset().top }, 'slow');
           return false;
         })
@@ -194,8 +192,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
         body.albums.items.forEach((album) => {
 
-          // albums.push(album.name);
-
           // make API call to get tracks from albums
           let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
           let albumOptions = {
@@ -209,8 +205,6 @@ document.addEventListener('DOMContentLoaded', () => {
           request.get(albumOptions, function(error, response, body){
 
             body.items.forEach(track => {
-              // track.artists.forEach(artist => {console.log('artist:' + artist.name)});
-              // console.log('track:' + track.name)
               trackIds.push(track.id)
             });
 
@@ -243,17 +237,16 @@ document.addEventListener('DOMContentLoaded', () => {
                       })
                     })
                     console.log(allAudioFeatures)
-                      
-                    const nav2 = document.createElement("i")
-                    nav2.setAttribute("class","fas fa-angle-down");
-                    nav2.setAttribute("onClick", "scroll1()")
-                    nav2Icon = document.getElementById("nav-2-icon")
-                    nav2Icon.appendChild(nav2);
 
-                    nav2Icon.addEventListener('click', function(){
-                      $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
+                    const prev2 = document.createElement("i")
+                    prev2.setAttribute("class", "fas fa-angle-up");
+                    prev2Icon = document.getElementById("prev-2-icon");
+                    prev2Icon.appendChild(prev2);
+                    prev2Icon.addEventListener('click', function(){
+                      $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
                       return false;
                     })
+
 
                     //Sunburst Chart
 
@@ -269,16 +262,10 @@ document.addEventListener('DOMContentLoaded', () => {
                       }
                       dataByKey[order].push(track)
                       })
-                      console.log(dataByKey)
 
-
-
-                    let colors = d3.scaleOrdinal()
-                      .domain(dataByKey)
-                      .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
-
-
-                    console.log('testing')
+                    // let colors = d3.scaleOrdinal()
+                    //   .domain(dataByKey)
+                    //   .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
                       
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
@@ -302,8 +289,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     root.children.forEach(child => {
                       child.children.forEach(track => {track.size = sunburstY(child.size)})
                     })
-
-                    console.log(root)
 
                     root = d3.hierarchy(root)
                       .sum(function(d){ 
@@ -334,6 +319,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (!d.parent) return 'root-level'
                       })
                       .style('opacity', function(d){ if (!d.parent) return 0; else return 1})
+                      // .style("opacity", 0)
                       .attr("stroke", "black")
                       .attr("stroke-opacity", "0.5")
                       .attr("class", function(d){
@@ -447,7 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                       rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                                     }
-                                    console.log(body)
+                                    // console.log(body)
                                     track.name = body.name
                                     track.artists = []
                                     body.artists.forEach(artist => {track.artists.push(artist.name)})
@@ -512,7 +498,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             })
                           }, 700)
-                          console.log('poop')
                         }
 
                       }
@@ -563,7 +548,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         }, 800)
                           
                       }
-                        console.log(d)
+                        // console.log(d)
                         
 
                     }
@@ -591,10 +576,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         .style("font-family", "Roboto")
                         .attr("class", "key-text")
 
+                    const nav2 = document.createElement("i")
+                    nav2.setAttribute("class","fas fa-angle-down");
+                    
+                    nav2Icon = document.getElementById("nav-2-icon")
+                    nav2Icon.appendChild(nav2);
+                    nav2Icon.addEventListener('click', function(){
+                      $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
+                      return false;
+                    })
+
 
                     // Scatterplot
-                    const graphHeight = 800;
-                    const graphWidth = 800;
+                    const graphHeight = 700;
+                    const graphWidth = 700;
                     const scaleTempo = d3.scaleLinear()
                       .domain([40, 230])
                       .range([0, graphWidth])
@@ -610,7 +605,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const trackInfoWindow = d3.select("#scatterplot").append("svg")
                       .attr("width", 448)
                       .attr("height", 448)
-                      .attr('x', 800)
+                      .attr('x', 700)
                     
                     const trackTempoText = trackInfoWindow.append("text")
                       .attr('x', 25)
@@ -633,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       // })
                       .attr("cx", -20)
                       .attr("cy", function(d){
-                        return graphHeight - d.danceability * 800
+                        return graphHeight - d.danceability * 700
                       })
                       .attr("r", function(d){
                         return d.energy * 10
@@ -671,16 +666,39 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                       })
 
-                    graph.selectAll("circle")
-                        .transition()
-                        .delay(function(d,i){return(i*3)})
-                        .duration(2000)
-                        .attr("cx", function(d){
-                          return scaleTempo(d.tempo)
-                        })
-                        .attr("cy", function(d){
-                          return graphHeight - d.danceability * 800
-                        })
+                    const nav3 = document.createElement("i")
+                    nav3.setAttribute("class","fas fa-angle-down");
+                    let firstTimeNav3 = true;
+
+                    nav3Icon = document.getElementById("nav-3-icon")
+                    nav3Icon.appendChild(nav3);
+                    nav3Icon.addEventListener('click', function(){
+                      $('html, body').animate({ scrollTop: $('#scatterplot-container').offset().top }, 'slow');
+                      if (firstTimeNav3){
+                        graph.selectAll("circle")
+                          .transition()
+                          .delay(function(d,i){return(i*3)})
+                          .duration(2000)
+                          .attr("cx", function(d){
+                            return scaleTempo(d.tempo)
+                          })
+                          .attr("cy", function(d){
+                            return graphHeight - d.danceability * 700
+                          })
+                        firstTimeNav3 = false;
+                      }
+
+                      return false;
+                    })
+
+                    const prev3 = document.createElement("i");
+                    prev3.setAttribute("class", "fas fa-angle-up");
+                    prev3Icon = document.getElementById("prev-3-icon");
+                    prev3Icon.appendChild(prev3);
+                    prev3Icon.addEventListener('click', function(){
+                      $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
+                      return false;
+                    })
 
                   }
 
