@@ -69,6 +69,12 @@ svg {
 #about-me{
 	height: max-content;
 	width: 800px;
+	text-align: center;
+	padding: 5px;
+	border: 3px solid transparent;
+    border-image: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167));
+	border-image-slice: 1;
+	line-height: 1.5;
 }
 
 .nav {
