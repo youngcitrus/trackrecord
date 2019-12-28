@@ -65,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("height", 448)
 
         const infoWindow = d3.select("#main").append("svg")
-          .attr("width", 448)
+          .attr("width", 458)
           .attr("height", 448)
           .attr('x', 448)
 
@@ -82,29 +82,29 @@ document.addEventListener('DOMContentLoaded', () => {
           .text("When ready click the arrow below for more data")
 
         const albumText = infoWindow.append('text')
-          .attr("x", 0)
+          .attr("x", 10)
           .attr("y", 300)
           .attr("font-family", "Roboto")
           .attr("font-size", "19px")
 
         const artistText = infoWindow.append('text')
-          .attr("x", 0)
+          .attr("x", 10)
           .attr("y", 320)
           .attr("font-family", "Roboto")
           .attr("font-size", "16px")
 
 
         const releaseDateText = infoWindow.append('text')
-          .attr("x", 0)
+          .attr("x", 10)
           .attr("y", 340)
           .attr("font-family", "Roboto")
           .attr("font-size", "16px")
 
-        const albumType = infoWindow.append('text')
-          .attr("x", 0)
-          .attr("y", 360)
-          .attr("font-family", "Roboto")
-          .attr("font-size", "16px")
+        // const albumType = infoWindow.append('text')
+        //   .attr("x", 0)
+        //   .attr("y", 360)
+        //   .attr("font-family", "Roboto")
+        //   .attr("font-size", "16px")
 
         let artwork = svg.selectAll("image")
           .data(body.albums.items);
@@ -134,14 +134,14 @@ document.addEventListener('DOMContentLoaded', () => {
           
             infoWindow.append('image')
               .attr('xlink:href', d.images[1].url)
-              .attr('x', 0)
+              .attr('x', 10)
               .attr('y', 0)
               .attr('width', 250)
               .attr('height', 250)
               .attr('id', 'showImage')
 
             let foreignObject = infoWindow.append('foreignObject')
-              .attr('x', 0)
+              .attr('x', 10)
               .attr('y', 370)
               .attr('width', 448)
               .attr('height', 80)
@@ -157,6 +157,8 @@ document.addEventListener('DOMContentLoaded', () => {
             d.artists.forEach(artist => {
               artists.push(artist.name)
             })
+            let artistNames = artists.join(", ")
+            if (artistNames.length > 48) artistNames = artistNames.slice(0,48) + "..."
             // let artistsDisplay = "Artist: " + artists.join(", ");
 
             let date = new Date(d.release_date)
@@ -175,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
             albumText.text(albumName)
 
             artistText.text("")
-            artistText.text("Artist: " + artists.join(", "))
+            artistText.text("Artist: " + artistNames)
             
             releaseDateText.text("Released: " + date)
 
@@ -581,8 +583,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     nav2Icon = document.getElementById("nav-2-icon")
                     nav2Icon.appendChild(nav2);
+
+                    let firstTimeNav2 = true;
                     nav2Icon.addEventListener('click', function(){
                       $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
+                      if (firstTimeNav2) {
+                        firstTimeNav2 = false;
+                        // animate opacity appearing for sunburst wheel
+                      }
                       return false;
                     })
 
