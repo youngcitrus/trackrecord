@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', () => {
         console.log(body);
 
         const nav1 = document.createElement("p")
-        nav1.textContent = "start here";
+        nav1.textContent = "start";
 
         document.getElementById("nav-1").appendChild(nav1);
 
@@ -69,17 +69,29 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("height", 448)
           .attr('x', 448)
 
-        const svgText = infoWindow.append('text')
-          .attr("x", 100)
-          .attr("y", 200)
+        const albumArtInstructions = infoWindow.append('text')
+          .attr("x", 42)
+          .attr("y", 175)
           .attr("font-family", "Roboto")
-          .text("Click an album image for details")
+          .text("Browsing album art provides a visual way to discover")
 
-        const svgText2 = infoWindow.append('text')
-          .attr("x", 100)
-          .attr("y", 225)
-          .attr("font-family", "Roboto")
-          .text("When ready click the arrow below for more data")
+        const albumArtInstructions2 = infoWindow.append('text')
+        .attr("x", 38)
+        .attr("y", 200)
+        .attr("font-family", "Roboto")
+        .text("new music. Click an image to listen and get more details.")
+
+        const albumArtInstructions3 = infoWindow.append('text')
+        .attr("x", 108)
+        .attr("y", 250)
+        .attr("font-family", "Roboto")
+        .text("When ready, click the arrow below")
+
+        const albumArtInstructions4 = infoWindow.append('text')
+        .attr("x", 118)
+        .attr("y", 275)
+        .attr("font-family", "Roboto")
+        .text("to browse new releases by key.")
 
         const albumText = infoWindow.append('text')
           .attr("x", 10)
@@ -170,8 +182,11 @@ document.addEventListener('DOMContentLoaded', () => {
               albumName = albumName.slice(0,48) + "..."
             }
 
-            svgText.text("")
-            svgText2.text("")
+            albumArtInstructions.text("")
+            albumArtInstructions2.text("")
+            albumArtInstructions3.text("")
+            albumArtInstructions4.text("")
+            
 
             albumText.text("")
             albumText.text(albumName)

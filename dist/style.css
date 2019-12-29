@@ -77,6 +77,11 @@ svg {
 	line-height: 1.5;
 }
 
+#nav-1 {
+	position: absolute;
+	bottom: 325;
+}
+
 .nav {
 	color: blue;
 	height: max-content;
