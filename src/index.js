@@ -355,6 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       if (!d.children){
 
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
+                        if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
 
                         let foreignObject = keyWindow.append('foreignObject')
                           .attr('width', 80)
@@ -406,6 +407,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             .style('font-size', 14)
                             .on('click', function(){
                               d3.select('#root-level').dispatch('click');
+                              setTimeout(showKeyInstructions, 650)
                             });
                         }, 200)
 
@@ -574,19 +576,44 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('x', -40)
                       .attr('y', -40)
                     
-                    const keyInstructions = sunburstArea.append("svg")
-                      .attr("height", 350)
-                      .attr("width", 350)
-                      .attr('x', -100)
-                      .attr('y', -10)
+                    const showKeyInstructions = function(){
+                      const keyInstructions = sunburstArea.append("svg")
+                        .attr("id", "key-instructions")
+                        .attr("height", 350)
+                        .attr("width", 350)
+                        .attr('x', -114)
+                        .attr('y', -60)
 
-                    keyInstructions.append("text")
-                      .text("Click a slice with a key label to browse all songs in that key")
-                      .attr('x', 0)
-                      .attr('y', 40)
-                      .style("font-size", 10)
-                      .style("font-family", "Roboto")
+                      keyInstructions.append("text")
+                        .text("Click a slice with a key label")
+                        .attr('x', 28)
+                        .attr('y', 40)
+                        .style("font-size", 14)
+                        .style("font-family", "Roboto")
 
+                      keyInstructions.append("text")
+                        .text("to browse all songs in that key")
+                        .attr('x', 21)
+                        .attr('y', 60)
+                        .style("font-size", 14)
+                        .style("font-family", "Roboto")
+
+                      keyInstructions.append("text")
+                        .text("or click on an outer slice to listen")
+                        .attr('x', 14)
+                        .attr('y', 80)
+                        .style("font-size", 14)
+                        .style("font-family", "Roboto")
+
+                      keyInstructions.append("text")
+                        .text("to a preview of a song in a certain key.")
+                        .attr('x', 0)
+                        .attr('y', 100)
+                        .style("font-size", 14)
+                        .style("font-family", "Roboto")
+                    }
+
+                    showKeyInstructions();
 
                     sunburst.append("text")
                         .text(function(d){ 
