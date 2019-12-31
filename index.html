@@ -20,14 +20,17 @@
           <p>TrackRecord is a web application that uses D3 to display real-time information about the latest tracks and albums released on Spotify using Spotify's API and web player. You can explore and find new music organized by album art, musical key, and metrics such as tempo and danceability. Click below to get started.</p>
         </div>
         <div id="nav-1" class="nav">
-          <div class="dot-flashing dot"></div>
+          <div class="dot-flashing dot" id="loading-dots-1"></div>
         </div>
       </div>
 
       <div id="main-container">
         <div id="prev-1" class="prev"><p id="prev-1-icon"></p></div>
         <div id="main"></div>
-        <div id="nav-2" class="nav"><p id="nav-2-icon"></p></div>
+        <div id="nav-2" class="nav">
+          <div class="dot-flashing dot" id="loading-dots-2"></div>
+          <p id="nav-2-icon"></p>
+        </div>
       </div>
       <div id="sunburst-container">
         <div id="prev-2" class="prev"><p id="prev-2-icon"></p></div>

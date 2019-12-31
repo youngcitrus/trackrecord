@@ -41,6 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         console.log(body);
 
+        document.getElementById("loading-dots-1").remove();
+
         const nav1 = document.createElement("p")
         nav1.textContent = "start";
 
@@ -605,6 +607,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     const nav2 = document.createElement("i")
                     nav2.setAttribute("class","fas fa-angle-down");
                     
+                    document.getElementById("loading-dots-2").remove();
+
                     nav2Icon = document.getElementById("nav-2-icon")
                     nav2Icon.appendChild(nav2);
 
