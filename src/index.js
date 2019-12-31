@@ -354,7 +354,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
 
-                        let foreignObject = testWindow.append('foreignObject')
+                        let foreignObject = keyWindow.append('foreignObject')
                           .attr('width', 80)
                           .attr('height', 80)
                         let player = foreignObject.append("xhtml:iframe")
@@ -562,19 +562,28 @@ document.addEventListener('DOMContentLoaded', () => {
                             .style("font-family", "Roboto")
                             .attr("class", "key-text")
 
-                        }, 800)
-                          
-                      }
-                        // console.log(d)
-                        
-
+                        }, 800)  
+                      } 
                     }
 
-                    const testWindow = sunburstArea.append("svg")
+                    const keyWindow = sunburstArea.append("svg")
                       .attr("height", 350)
                       .attr("width", 350)
                       .attr('x', -40)
                       .attr('y', -40)
+                    
+                    const keyInstructions = sunburstArea.append("svg")
+                      .attr("height", 350)
+                      .attr("width", 350)
+                      .attr('x', -100)
+                      .attr('y', -10)
+
+                    keyInstructions.append("text")
+                      .text("Click a slice with a key label to browse all songs in that key")
+                      .attr('x', 0)
+                      .attr('y', 40)
+                      .style("font-size", 10)
+                      .style("font-family", "Roboto")
 
 
                     sunburst.append("text")
