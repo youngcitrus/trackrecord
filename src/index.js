@@ -351,11 +351,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     let level = 0
 
                     function click(d){
+
+                      if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
                         
                       if (!d.children){
 
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
-                        if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
 
                         let foreignObject = keyWindow.append('foreignObject')
                           .attr('width', 80)
@@ -389,7 +390,8 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                         sunburstArea.selectAll('text')
                           .remove()
-                        
+                        const backButton = sunburstArea.append('text')
+
                         setTimeout(function(){
                           sunburstArea.append('text')
                             .text(keys[d.children[0].data.key])
@@ -398,17 +400,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             .style('font-family', 'Roboto')
                             .style('font-size', 17)
 
-                          sunburstArea.append('text')
-                            .text('back')
+                          backButton.text('back')
                             .attr('x', -13.75)
                             .attr('y', 165)
                             .style('cursor', 'default')
                             .style('font-family', 'Roboto')
                             .style('font-size', 14)
-                            .on('click', function(){
-                              d3.select('#root-level').dispatch('click');
-                              setTimeout(showKeyInstructions, 650)
-                            });
+                            // .on('click', function(){
+                            //   d3.select('#root-level').dispatch('click');
+                              // setTimeout(showKeyInstructions, 650)
+                            // });
                         }, 200)
 
                         sunburstArea.selectAll('path')
@@ -485,6 +486,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                       d3.selectAll('.selectors').on('click', click)
                                       d.loaded = true;
                                       foreignDiv.remove();
+                                      backButton.on('click', function(){
+                                        d3.select('#root-level').dispatch('click');
+                                        setTimeout(showKeyInstructions, 800);
+                                      })
                                     }
                                   })
                                 })
@@ -493,6 +498,10 @@ document.addEventListener('DOMContentLoaded', () => {
                           }, 650)
                         } else {
                           d3.selectAll('.selectors').on('click', click)
+                          backButton.on('click', function(){
+                            d3.select('#root-level').dispatch('click');
+                            setTimeout(showKeyInstructions, 800);
+                          })
                           
                           setTimeout(function(){
                             d.children.forEach((track, index) => {
@@ -577,40 +586,42 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('y', -40)
                     
                     const showKeyInstructions = function(){
-                      const keyInstructions = sunburstArea.append("svg")
-                        .attr("id", "key-instructions")
-                        .attr("height", 350)
-                        .attr("width", 350)
-                        .attr('x', -114)
-                        .attr('y', -60)
+                      if (level == 0){
+                        const keyInstructions = sunburstArea.append("svg")
+                          .attr("id", "key-instructions")
+                          .attr("height", 350)
+                          .attr("width", 350)
+                          .attr('x', -114)
+                          .attr('y', -60)
 
-                      keyInstructions.append("text")
-                        .text("Click a slice with a key label")
-                        .attr('x', 28)
-                        .attr('y', 40)
-                        .style("font-size", 14)
-                        .style("font-family", "Roboto")
+                        keyInstructions.append("text")
+                          .text("Click a slice with a key label")
+                          .attr('x', 28)
+                          .attr('y', 40)
+                          .style("font-size", 14)
+                          .style("font-family", "Roboto")
 
-                      keyInstructions.append("text")
-                        .text("to browse all songs in that key")
-                        .attr('x', 21)
-                        .attr('y', 60)
-                        .style("font-size", 14)
-                        .style("font-family", "Roboto")
+                        keyInstructions.append("text")
+                          .text("to browse all songs in that key")
+                          .attr('x', 21)
+                          .attr('y', 60)
+                          .style("font-size", 14)
+                          .style("font-family", "Roboto")
 
-                      keyInstructions.append("text")
-                        .text("or click on an outer slice to listen")
-                        .attr('x', 14)
-                        .attr('y', 80)
-                        .style("font-size", 14)
-                        .style("font-family", "Roboto")
+                        keyInstructions.append("text")
+                          .text("or click on an outer slice to listen")
+                          .attr('x', 14)
+                          .attr('y', 80)
+                          .style("font-size", 14)
+                          .style("font-family", "Roboto")
 
-                      keyInstructions.append("text")
-                        .text("to a preview of a song in a certain key.")
-                        .attr('x', 0)
-                        .attr('y', 100)
-                        .style("font-size", 14)
-                        .style("font-family", "Roboto")
+                        keyInstructions.append("text")
+                          .text("to a preview of a song in a certain key.")
+                          .attr('x', 0)
+                          .attr('y', 100)
+                          .style("font-size", 14)
+                          .style("font-family", "Roboto")
+                      }
                     }
 
                     showKeyInstructions();
