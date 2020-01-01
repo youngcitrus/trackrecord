@@ -3,7 +3,12 @@ const request = require('request');
 const client_id = '2ac94934ad554c1c86adad5ab47d1553'; // Your client id
 const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
 
+window.onbeforeunload = function () {
+  document.getElementsByTagName("BODY")[0].style.display = "none";
+  window.scrollTo(0, 0);
+}
 document.addEventListener('DOMContentLoaded', () => {
+  
   console.log('hi');
   
   //request auth token from Spotify API
@@ -23,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!error && response.statusCode === 200) {
   
       // use the access token to access the Spotify Web API
-      // request 50 latest album/single releases
+      // request 49 latest album/single releases
 
       let token = body.access_token;
       let options = {
