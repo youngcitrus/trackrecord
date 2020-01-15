@@ -3,13 +3,14 @@ const request = require('request');
 const client_id = '2ac94934ad554c1c86adad5ab47d1553'; // Your client id
 const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
 
+// refresh page at the top
 window.onbeforeunload = function () {
   document.getElementsByTagName("BODY")[0].style.display = "none";
   window.scrollTo(0, 0);
 }
+
+// main program run
 document.addEventListener('DOMContentLoaded', () => {
-  
-  console.log('hi');
   
   //request auth token from Spotify API
 
@@ -39,13 +40,14 @@ document.addEventListener('DOMContentLoaded', () => {
         json: true
       };
 
+      // will store trackIds in array below
       const trackIds = [];
-      const albums = [];
 
       request.get(options, function(error, response, body) {
         
         console.log(body);
 
+        // remove loading dots once API call provides response, replace it with navigation start button
         document.getElementById("loading-dots-1").remove();
 
         const nav1 = document.createElement("p")
@@ -67,6 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
           return false;
         })
 
+        // create SVG to display album art and information
+
         const svg = d3.select("#main").append("svg")
           .attr("width", 448)
           .attr("height", 448)
@@ -80,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("x", 42)
           .attr("y", 175)
           .attr("font-family", "Roboto")
-          .text("Browsing album art provides a visual way to discover")
 
         const albumArtInstructions2 = infoWindow.append('text')
         .attr("x", 38)
@@ -100,11 +103,21 @@ document.addEventListener('DOMContentLoaded', () => {
         .attr("font-family", "Roboto")
         .text("to browse new releases by key.")
 
+        const showArtInstructions = function(){
+          albumArtInstructions.text("Browsing album art provides a visual way to discover")
+          albumArtInstructions2.text("new music. Click an image to listen and get more details.")
+          albumArtInstructions3.text("When ready, click the arrow below")
+          albumArtInstructions4.text("to browse new releases by key.")
+        }
+
+        showArtInstructions();
+
         const albumText = infoWindow.append('text')
           .attr("x", 10)
           .attr("y", 300)
           .attr("font-family", "Roboto")
           .attr("font-size", "19px")
+          .on('click', function(){console.log("okfinethen")})
 
         const artistText = infoWindow.append('text')
           .attr("x", 10)
@@ -119,15 +132,12 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("font-family", "Roboto")
           .attr("font-size", "16px")
 
-        // const albumType = infoWindow.append('text')
-        //   .attr("x", 0)
-        //   .attr("y", 360)
-        //   .attr("font-family", "Roboto")
-        //   .attr("font-size", "16px")
-
+        // map data from API response to images using D3 
         let artwork = svg.selectAll("image")
           .data(body.albums.items);
         
+        let firstArtClick = true;
+
         artwork.enter()
           .append("image")
           .attr('xlink:href', function(d){
@@ -141,16 +151,31 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('y', function(d, i){
             return Math.floor(i / 7) * 64
           })
+          
+          // when clicking album art image, display information and preview
 
-          .on('mouseover', function (d, i) {
-            
-            d3.select(this).transition()
-                 .duration('50')
-                 .attr('opacity', '.85')
-          })
-          
           .on('click', function (d, i) {
-          
+            if (firstArtClick) {
+              const infoIcon = infoWindow.append('image')
+                .attr('xlink:href', 'https://track-record-app.s3-us-west-1.amazonaws.com/question-circle-regular.png')
+                .attr('x', 435)
+                .attr('y', 10)
+                .attr('width', 20)
+                .attr('height', 20)
+                .on('click', function(){
+                  albumText.text("");
+                  artistText.text("");
+                  releaseDateText.text("");
+                  showArtInstructions();
+                  if (d3.select('#album-player')) d3.select('#album-player').remove();
+                  if (d3.select('#showImage')) d3.select('#showImage').remove();
+                })
+
+              firstArtClick = false;
+            }
+
+            if (d3.select('#showImage')) d3.select('#showImage').remove();
+            
             infoWindow.append('image')
               .attr('xlink:href', d.images[1].url)
               .attr('x', 10)
@@ -158,7 +183,7 @@ document.addEventListener('DOMContentLoaded', () => {
               .attr('width', 250)
               .attr('height', 250)
               .attr('id', 'showImage')
-
+            
             let foreignObject = infoWindow.append('foreignObject')
               .attr('x', 10)
               .attr('y', 370)
@@ -172,13 +197,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 .attr('src', 'https://open.spotify.com/embed/album/' + d.id)
                 .attr('allow', 'encrypted-media')
 
+            
+            // truncate and display artist and album names
             let artists = [];
             d.artists.forEach(artist => {
               artists.push(artist.name)
             })
+
             let artistNames = artists.join(", ")
             if (artistNames.length > 48) artistNames = artistNames.slice(0,48) + "..."
-            // let artistsDisplay = "Artist: " + artists.join(", ");
 
             let date = new Date(d.release_date)
             date = date.toString().split(" ");
@@ -189,6 +216,7 @@ document.addEventListener('DOMContentLoaded', () => {
               albumName = albumName.slice(0,48) + "..."
             }
 
+            // remove instructions
             albumArtInstructions.text("")
             albumArtInstructions2.text("")
             albumArtInstructions3.text("")
@@ -205,18 +233,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
           })
           
+          //highlight album images on mouseover
+          .on('mouseover', function (d, i) {
+            d3.select(this).transition()
+                 .duration('50')
+                 .attr('opacity', '.85')
+          })
           .on('mouseout', function (d, i) {
             d3.select(this).transition()
                  .duration('50')
                  .attr('opacity', '1');
           })
-
         
+        // make API call to get tracks from all 49 albums
         let successCounter = 0
         
         body.albums.items.forEach((album) => {
-
-          // make API call to get tracks from albums
           let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
           let albumOptions = {
             url: albumUrl,
@@ -225,14 +257,20 @@ document.addEventListener('DOMContentLoaded', () => {
             },
             json: true
           };
-          
+
+          // request tracks for each album
           request.get(albumOptions, function(error, response, body){
 
             body.items.forEach(track => {
+              // push track IDs in API response into trackIds array
               trackIds.push(track.id)
             });
 
             successCounter += 1;
+            
+            // when finished grabbing all trackIDs, recursively request all audio features from each track ID
+            // 100 tracks at a time, until there are no more tracks remaining
+
             if (successCounter === 49){
               let audioFeatures = [];
               let numRecursions = Math.floor(trackIds.length/100) + 1;
@@ -251,9 +289,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 request.get(tracksOptions, function(error, response, body){
+                  // push API response body (audio features for 100 tracks) into audioFeatures array
                   audioFeatures.push(body);
                   if (audioFeatures.length === numRecursions){
-
+                    // flatten audio features array
                     let allAudioFeatures = [];
                     audioFeatures.forEach(part => {
                       part.audio_features.forEach(datum => {
@@ -262,6 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
                     console.log(allAudioFeatures)
 
+                    // create navigation button to go back to album image from sunburst chart
                     const prev2 = document.createElement("i")
                     prev2.setAttribute("class", "fas fa-angle-up");
                     prev2Icon = document.getElementById("prev-2-icon");
@@ -272,17 +312,19 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
 
 
-                    //Sunburst Chart
+        //Sunburst Chart
 
+                    // initialize data object and key arrays
                     let dataByKey = {};
                     const keys = ["C", "Db/C#", "D", "Eb", "E", "F", "Gb/F#", "G", "Ab", "A", "Bb", "B"]
                     const circleOfFifths = ["C", "G", "D", "A", "E", "B", "Gb/F#", "Db/C#", "Ab", "Eb", "Bb", "F"]
+                    
+                    // push tracks into data object, organized in order of Circle of Fifths
                     allAudioFeatures.forEach((track) => {
                       let key = keys[track.key]
                       let order = circleOfFifths.indexOf(key);
                       if (!dataByKey[order]) {    
                         dataByKey[order] = []
-                        // dataByKey[key]["order"] = order
                       }
                       dataByKey[order].push(track)
                       })
@@ -290,7 +332,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     // let colors = d3.scaleOrdinal()
                     //   .domain(dataByKey)
                     //   .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
-                      
+                    
+                
+                    // create Sunburst Chart
+                
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
                     const sunburstY = d3.scaleSqrt()
@@ -354,13 +399,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
                         
                     let level = 0
+                    
+                // click function - main interactive aspect of Sunburst
 
                     function click(d){
-
+                      // remove initial instructions
                       if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
-                        
+                      
+                      // when clicking on an outermost slice
                       if (!d.children){
-
+                        // remove any spotify players and append a new one
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
 
                         let foreignObject = keyWindow.append('foreignObject')
@@ -373,14 +421,20 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style('border-radius','20px')              
                       }
 
+                      // when clicking a mid level slice (key level)
+
                       if (d.children && d.parent && level !== 1){
                         level = 1
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
                         
+                        // no hover effects on text of data points (?)
                         d3.selectAll(".key-level").classed("no-hover", true)
                         d3.select("#root-level").classed("no-hover", true)
-
+                        
+                        // make root level data point blend in
                         d3.select('#root-level').style('fill',sunburstColors(d.data.name)).style('opacity', 1).attr('stroke', sunburstColors(d.data.name))
+                        
+                        // animation transition
                         sunburstArea.transition()
                           .duration(650)
                           .tween("scales", function() {
@@ -398,6 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         const backButton = sunburstArea.append('text')
 
                         setTimeout(function(){
+                          // add artist names to data points
                           sunburstArea.append('text')
                             .text(keys[d.children[0].data.key])
                             .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
@@ -411,21 +466,20 @@ document.addEventListener('DOMContentLoaded', () => {
                             .style('cursor', 'default')
                             .style('font-family', 'Roboto')
                             .style('font-size', 14)
-                            // .on('click', function(){
-                            //   d3.select('#root-level').dispatch('click');
-                              // setTimeout(showKeyInstructions, 650)
-                            // });
                         }, 200)
 
+                        // remove stroke from key level data points
                         sunburstArea.selectAll('path')
                           .attr("stroke-width", function(data){
                             return (data.parent && data.children) ? 0 : 1
                           });
-
+                        
+                        // disable clickability of all data points until all have loaded
                         d3.selectAll('.selectors').on('click',function(){
-                          d3.select(this).on('click',null);
+                          d3.select(this).on('click', null);
                         });
 
+                        // create a loading spinner while songs load
                         if (!d.loaded){
                           setTimeout(function(){
                             let foreignDiv = sunburstArea.append('foreignObject')
@@ -437,6 +491,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             let loading = foreignDiv.append('xhtml:div')
                               .attr('id', 'loading-spin')
 
+                        // request Spotify API for information about songs in that key
                             request.post(authOptions, function(error, response, body){
                               if (!error && response.statusCode === 200){
                                 let token = body.access_token;
@@ -452,6 +507,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                   
                                   request.get(options, function(error, response, body){
 
+                                    // append artist information to data slice
                                     let rotation
                                     
                                     if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
@@ -460,7 +516,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                       rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                                     }
-                                    // console.log(body)
+                                    
                                     track.name = body.name
                                     track.artists = []
                                     body.artists.forEach(artist => {track.artists.push(artist.name)})
@@ -488,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         .style('opacity', "1")
                                     successTrack += 1
                                     if (successTrack === d.children.length) {
+                                      // data now loaded! make data points clickable, remove loading spinner
                                       d3.selectAll('.selectors').on('click', click)
                                       d.loaded = true;
                                       foreignDiv.remove();
@@ -502,6 +559,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             })
                           }, 650)
                         } else {
+                          // make data points clickable, append stored artist information to data points
                           d3.selectAll('.selectors').on('click', click)
                           backButton.on('click', function(){
                             d3.select('#root-level').dispatch('click');
@@ -536,15 +594,20 @@ document.addEventListener('DOMContentLoaded', () => {
                         }
 
                       }
-                            
+                      
+                      // when clicking the root level data point, from the key level (level 1)                      
                       if (!d.parent && level !== 0){
 
                         level = 0
+                        
+                        // remove any spotify players
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
 
                         d3.selectAll(".key-level").classed("no-hover", false)
 
                         d3.select('#root-level').style('fill', 'white' )
+                        
+                        // animation transition
                         sunburstArea.transition()
                           .duration(650)
                           .tween("scales", function() {
@@ -555,10 +618,12 @@ document.addEventListener('DOMContentLoaded', () => {
                           })
                           .selectAll("path")
                             .attrTween("d", function(d){return function(){return sunburstArc(d)}})
-
+                        
+                        // remove all text
                         sunburstArea.selectAll('text')
                           .remove()
                         
+                        // append key information text
                         setTimeout(function(){
                           sunburstArea.selectAll('path')
                               .attr("stroke-width", 1)
@@ -590,6 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('x', -40)
                       .attr('y', -40)
                     
+                    // define a function to show instructions for sunburst chart
                     const showKeyInstructions = function(){
                       if (level == 0){
                         const keyInstructions = sunburstArea.append("svg")
@@ -631,11 +697,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showKeyInstructions();
 
+                    // 
                     sunburst.append("text")
                         .text(function(d){ 
                           if (d.parent === null) return ""
                           if (d.children) {
-                            // debugger
                             let key = d.children[0].data.key
                             return keys[key]
                           }
@@ -646,13 +712,19 @@ document.addEventListener('DOMContentLoaded', () => {
                         .style("font-size", 14)
                         .style("font-family", "Roboto")
                         .attr("class", "key-text")
-
+                    
+                    // create down arrow to allow access to this part of the page from previous page, remove loading dots
+                    const browseByKeyText = document.createTextNode("browse by key")
+                    const lineBreak = document.createElement("br");
                     const nav2 = document.createElement("i")
                     nav2.setAttribute("class","fas fa-angle-down");
+                    nav2.setAttribute("id","down-arrow-nav");
                     
                     document.getElementById("loading-dots-2").remove();
 
-                    nav2Icon = document.getElementById("nav-2-icon")
+                    nav2Icon = document.getElementById("nav-2-icon");
+                    nav2Icon.append(browseByKeyText);
+                    nav2Icon.append(lineBreak)
                     nav2Icon.appendChild(nav2);
 
                     let firstTimeNav2 = true;
@@ -666,7 +738,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
 
 
-                    // Scatterplot
+                // Scatterplot
                     const graphHeight = 700;
                     const graphWidth = 700;
                     const scaleTempo = d3.scaleLinear()
@@ -782,6 +854,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
 
                 })
+                // recursive call from fetching all tracks
                 return fetchAllTracks(remaining);
 
               }

@@ -93,6 +93,7 @@ svg {
 .nav p{
 	width: max-content;
 	margin: 0 auto;
+	text-align: center;
 }
 
 .prev {
