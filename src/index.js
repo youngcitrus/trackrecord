@@ -418,7 +418,11 @@ document.addEventListener('DOMContentLoaded', () => {
                           .attr('id', 'key-player')
                           .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                           .attr('allow', 'encrypted-media')
-                          .style('border-radius','20px')              
+                          .style('border-radius','20px')
+                        
+                        keyWindow.append("text")
+                        console.log(d)
+                        
                       }
 
                       // when clicking a mid level slice (key level)
@@ -495,40 +499,18 @@ document.addEventListener('DOMContentLoaded', () => {
                             request.post(authOptions, function(error, response, body){
                               if (!error && response.statusCode === 200){
                                 let token = body.access_token;
+                                
                                 let successTrack = 0
+
                                 d.children.forEach((track, index) => {
-                                  let options = {
-                                    url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
-                                    headers: {
-                                      'Authorization': 'Bearer ' + token
-                                    },
-                                    json: true
-                                  };
                                   
-                                  request.get(options, function(error, response, body){
-
-                                    // append artist information to data slice
-                                    let rotation
-                                    
-                                    if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
-                                    else {
-                                      newIndex = index - d.children.length/2
-
-                                      rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
-                                    }
-                                    
-                                    track.name = body.name
-                                    track.artists = []
-                                    body.artists.forEach(artist => {track.artists.push(artist.name)})
-                                    track.firstArtist = track.artists[0]
-                                    track.albumName = body.album.name
-                                    track.releaseDate = body.album.release_date
-                                    
-                                    let artistNameTrack = body.artists[0].name
+                                  if (track.hasInfo){
+                                    let artistNameTrack = track.artists[0]
                                     if (artistNameTrack.length > 17) {
                                       artistNameTrack = artistNameTrack.slice(0, 17) + "..."
                                       track.firstArtist = track.firstArtist.slice(0, 17) + "..."
                                     }
+
                                     sunburstArea.append("text")
                                       .text(artistNameTrack)
                                       .attr("transform", function() {
@@ -553,7 +535,68 @@ document.addEventListener('DOMContentLoaded', () => {
                                         setTimeout(showKeyInstructions, 800);
                                       })
                                     }
-                                  })
+                                    
+                                  } else {
+                                    let options = {
+                                      url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
+                                      headers: {
+                                        'Authorization': 'Bearer ' + token
+                                      },
+                                      json: true
+                                    };
+                                    
+                                    request.get(options, function(error, response, body){
+
+                                      // append artist information to data slice
+                                      let rotation
+                                      
+                                      if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
+                                      else {
+                                        newIndex = index - d.children.length/2
+
+                                        rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
+                                      }
+                                      
+                                      track.hasInfo = true
+                                      track.name = body.name
+                                      track.artists = []
+                                      body.artists.forEach(artist => {track.artists.push(artist.name)})
+                                      track.firstArtist = track.artists[0]
+                                      track.albumName = body.album.name
+                                      track.releaseDate = body.album.release_date
+                                      
+                                      let artistNameTrack = track.artists[0]
+                                      if (artistNameTrack.length > 17) {
+                                        artistNameTrack = artistNameTrack.slice(0, 17) + "..."
+                                        track.firstArtist = track.firstArtist.slice(0, 17) + "..."
+                                      }
+
+                                      sunburstArea.append("text")
+                                        .text(artistNameTrack)
+                                        .attr("transform", function() {
+                                          return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
+                                        })
+                                        .style("text-anchor", "middle")
+                                        .style("font-size", 14)
+                                        .style("opacity", "0")
+                                        .attr("class", "key-text")
+                                        .style("font-family", "Roboto")
+                                          .transition()
+                                          .duration(100)
+                                          .style('opacity', "1")
+                                      successTrack += 1
+                                      if (successTrack === d.children.length) {
+                                        // data now loaded! make data points clickable, remove loading spinner
+                                        d3.selectAll('.selectors').on('click', click)
+                                        d.loaded = true;
+                                        foreignDiv.remove();
+                                        backButton.on('click', function(){
+                                          d3.select('#root-level').dispatch('click');
+                                          setTimeout(showKeyInstructions, 800);
+                                        })
+                                      }
+                                    })
+                                  }
                                 })
                               }
                             })
