@@ -420,8 +420,36 @@ document.addEventListener('DOMContentLoaded', () => {
                           .attr('allow', 'encrypted-media')
                           .style('border-radius','20px')
                         
-                        keyWindow.append("text")
-                        console.log(d)
+                        if (d.hasInfo){
+                          keyWindow.append("text")
+                          // console.log(d)
+                        } else {
+                          request.post(authOptions, function(error, response, body){
+                            if (!error && response.statusCode === 200){
+                              let token = body.access_token;
+                              let options = {
+                                url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + d.data.id,
+                                headers: {
+                                  'Authorization': 'Bearer ' + token
+                                },
+                                json: true
+                              };
+                              request.get(options, function(error, response, body){
+                                d.hasInfo = true
+                                d.name = body.name
+                                d.artists = []
+                                body.artists.forEach(artist => {d.artists.push(artist.name)})
+                                d.firstArtist = d.artists[0]
+                                d.albumName = body.album.name
+                                d.releaseDate = body.album.release_date
+
+                                console.log(d)
+                              })
+
+
+                            }
+                          })
+                        }
                         
                       }
 
@@ -511,6 +539,14 @@ document.addEventListener('DOMContentLoaded', () => {
                                       track.firstArtist = track.firstArtist.slice(0, 17) + "..."
                                     }
 
+                                    let rotation
+                                    if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
+                                    else {
+                                      newIndex = index - d.children.length/2
+
+                                      rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
+                                    }
+
                                     sunburstArea.append("text")
                                       .text(artistNameTrack)
                                       .attr("transform", function() {
@@ -535,7 +571,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         setTimeout(showKeyInstructions, 800);
                                       })
                                     }
-                                    
+
                                   } else {
                                     let options = {
                                       url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
