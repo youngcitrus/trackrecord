@@ -405,7 +405,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     function click(d){
                       // remove initial instructions
                       if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
-                      
+                      if (d3.selectAll('.sunburst-artist-text')) d3.selectAll('.sunburst-artist-text').remove();
+                      if (d3.selectAll('.sunburst-name-text')) d3.selectAll('.sunburst-name-text').remove();
                       // when clicking on an outermost slice
                       if (!d.children){
                         // remove any spotify players and append a new one
@@ -421,9 +422,23 @@ document.addEventListener('DOMContentLoaded', () => {
                           .style('border-radius','20px')
                         
                         if (d.hasInfo){
-                          keyWindow.append("text")
-                          // console.log(d)
+                          sunburstArea.append("text")
+                            .text(d.firstArtist)
+                            .attr('x', -40)
+                            .attr('y', 100)
+                            .attr('class', 'sunburst-artist-text')
+                          
+                          sunburstArea.append("text")
+                            .text('"' + d.name + '"')
+                            .attr('x', -40)
+                            .attr('y', -100)
+                            .attr('class', 'sunburst-name-text')
+
+                          
                         } else {
+                          d3.selectAll('.selectors').on('click',function(){
+                            d3.select(this).on('click', null);
+                          });
                           request.post(authOptions, function(error, response, body){
                             if (!error && response.statusCode === 200){
                               let token = body.access_token;
@@ -443,7 +458,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                 d.albumName = body.album.name
                                 d.releaseDate = body.album.release_date
 
-                                console.log(d)
+                                sunburstArea.append("text")
+                                  .text(d.firstArtist)
+                                  .attr('x', -40)
+                                  .attr('y', 100)
+                                  .attr('class', 'sunburst-artist-text')
+                                sunburstArea.append("text")
+                                  .text('"' + d.name + '"')
+                                  .attr('x', -40)
+                                  .attr('y', -100)
+                                  .attr('class', 'sunburst-name-text')
+                                d3.selectAll('.selectors').on('click', click)
+                                
                               })
 
 
