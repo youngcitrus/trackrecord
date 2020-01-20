@@ -55,7 +55,7 @@ svg {
 }
 
 #landing{
-	position: relative;
+	/* position: relative; */
 	display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -67,6 +67,7 @@ svg {
 	color: white;
 	background-image: url('track-record-background.jpg');
 	background-size: 100%;
+	
 }
 
 /* #about-me{
@@ -160,6 +161,8 @@ svg {
 
 
 #main{
+	min-width: 910px;
+	min-height: 450px;
 	width: 910px;
 	height: 450px;
 	padding: 5px;
@@ -170,6 +173,7 @@ svg {
 }
 
 #main-container{
+	min-height: 100%;
 	display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -228,8 +232,8 @@ iframe {
 }
 
 #sunburst{
-	width: 700px;
-	height: 700px;
+	width: 100%;
+	height: 100%;
 }
 
 #scatterplot-container{
