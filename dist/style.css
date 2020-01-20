@@ -26,7 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	/* overflow: hidden; */
+	overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -63,10 +63,13 @@ svg {
     display: flex;
 	align-items: center;
 	justify-content: center;
-	font-family: 'Roboto'
+	font-family: 'Roboto';
+	color: white;
+	background-image: url('track-record-background.jpg');
+	background-size: 100%;
 }
 
-#about-me{
+/* #about-me{
 	height: max-content;
 	width: 800px;
 	text-align: center;
@@ -75,11 +78,53 @@ svg {
     border-image: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167));
 	border-image-slice: 1;
 	line-height: 1.5;
+} */
+
+#about-me{
+	padding-top: 150px;
+	padding-left: 70px;
+	padding-right: 70px;
+}
+
+
+#title {
+	height: max-content;
+	width: max-content;
+	font-size: 70px;
+	font-weight: bold;
+	text-shadow: 3px 3px 0px rgba(63,107,169, 0.2);
+	/* padding-left: 70%; */
+	padding-bottom: 8%;
+	/* margin: 0 auto; */
+}
+
+#landing h2{
+	height: max-content;
+	font-size: 55px;
+	/* padding-left: 70%; */
+	padding-left: 10px;
+	padding-bottom: 15px;
+}
+
+#landing p{
+	height: max-content;
+	/* padding-left: 70%; */
+	width: 30%;
+	padding-left: 10px;
+	padding-bottom: 50px;
+	font-size: 20px;
 }
 
 #nav-1 {
-	position: absolute;
-	bottom: 325;
+	width: max-content;
+	height: max-content;
+	padding-left: 18px;
+}
+
+#start-button {
+	width: max-content;
+	height: max-content;
+	padding-left: 0px;
 }
 
 .nav {

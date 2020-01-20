@@ -52,6 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const nav1 = document.createElement("p")
         nav1.textContent = "start";
+        nav1.setAttribute("id", "start-button")
 
         document.getElementById("nav-1").appendChild(nav1);
 
