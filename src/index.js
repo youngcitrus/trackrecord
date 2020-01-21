@@ -512,11 +512,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         sunburstArea.selectAll('text')
                           .remove()
                         const backButton = sunburstArea.append('text')
-
+                        let currentKey = keys[d.children[0].data.key];
+                        
                         setTimeout(function(){
-                          // add artist names to data points
+                          // add key name and back button to data points
+                          
                           sunburstArea.append('text')
-                            .text(keys[d.children[0].data.key])
+                            .text(currentKey)
                             .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
                             .attr('y', -1 - sunburstHeight * 0.21)
                             .style('font-family', 'Roboto')
@@ -576,30 +578,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                       rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                                     }
-
+                                    // append artist names to data points
                                     sunburstArea.append("text")
                                       .text(artistNameTrack)
                                       .attr("transform", function() {
                                         return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                       })
                                       .style("text-anchor", "middle")
-                                      .style("font-size", 14)
+                                      .style("font-size", 10)
                                       .style("opacity", "0")
                                       .attr("class", "key-text")
                                       .style("font-family", "Roboto")
                                         .transition()
                                         .duration(100)
                                         .style('opacity', "1")
+
                                     successTrack += 1
                                     if (successTrack === d.children.length) {
                                       // data now loaded! make data points clickable, remove loading spinner
                                       d3.selectAll('.selectors').on('click', click)
                                       d.loaded = true;
+                                      
                                       foreignDiv.remove();
+                                      
                                       backButton.on('click', function(){
                                         d3.select('#root-level').dispatch('click');
                                         setTimeout(showKeyInstructions, 800);
                                       })
+
+                                      sunburstArea.append('text')
+                                        .text('These are new releases in the key of ' + currentKey)
+                                        .style('font-family', 'Roboto')
+                                        .style('font-size', 12)
+                                        .attr('x', sunburstWidth * -0.09)
                                     }
 
                                   } else {
@@ -643,7 +654,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                           return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                         })
                                         .style("text-anchor", "middle")
-                                        .style("font-size", 14)
+                                        //scale font-size
+                                        .style("font-size", 10)
                                         .style("opacity", "0")
                                         .attr("class", "key-text")
                                         .style("font-family", "Roboto")
@@ -656,6 +668,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                         d3.selectAll('.selectors').on('click', click)
                                         d.loaded = true;
                                         foreignDiv.remove();
+                                        sunburstArea.append('text')
+                                          .text('These are new releases in the key of ' + currentKey)
+                                          .style('font-family', 'Roboto')
+                                          .style('font-size', 12)
+                                          .attr('x', sunburstWidth * -0.09)
                                         backButton.on('click', function(){
                                           d3.select('#root-level').dispatch('click');
                                           setTimeout(showKeyInstructions, 800);
@@ -690,7 +707,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                         return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                       })
                                       .style("text-anchor", "middle")
-                                      .style("font-size", 14)
+                                      //scale font size
+                                      .style("font-size", 10)
                                       .style("opacity", "0")
                                       .attr("class", "key-text")
                                       .style("font-family", "Roboto")
