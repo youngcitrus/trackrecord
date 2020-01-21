@@ -338,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     // create Sunburst Chart
                     
                     const sunburstHeight = document.getElementById("sunburst-container").offsetHeight * .8;
-                    const sunburstWidth = document.getElementById("sunburst").offsetWidth * .8;
+                    const sunburstWidth = document.getElementById("sunburst-container").offsetWidth * .8;
 
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
@@ -371,9 +371,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const sunburstArea = d3.select("#sunburst").append("svg")
                       .attr("width", sunburstWidth)
-                      .attr("height", sunburstHeight)
+                      .attr("height", sunburstHeight/0.8)
                       .append("g")
-                      .attr("transform", "translate(" + (sunburstWidth/2).toString() + ", " + (sunburstHeight/2).toString() + ")")
+                      .attr("transform", "translate(" + ((sunburstWidth/2)/0.8).toString() + ", " + ((sunburstHeight/2)/0.8).toString() + ")")
                     
 
                     const sunburst = sunburstArea.selectAll('.path')
