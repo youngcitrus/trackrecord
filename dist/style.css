@@ -219,6 +219,19 @@ iframe {
 	100% { transform: rotate(360deg); }
 }
 
+#sunburst-container-container{
+	display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+	display: -webkit-flex;
+	position: relative;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-bottom: 10px;
+}
+
+
 #sunburst-container{
 	display: -webkit-box;
     display: -moz-box;

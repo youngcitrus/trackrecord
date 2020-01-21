@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     const sunburstArea = d3.select("#sunburst").append("svg")
-                      .attr("width", sunburstWidth)
+                      .attr("width", sunburstWidth/0.8)
                       .attr("height", sunburstHeight/0.8)
                       .append("g")
                       .attr("transform", "translate(" + ((sunburstWidth/2)/0.8).toString() + ", " + ((sunburstHeight/2)/0.8).toString() + ")")
@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         })
                                         .style("text-anchor", "middle")
                                         //scale font-size
-                                        .style("font-size", 10)
+                                        .style("font-size", 16 - Math.floor(sunburstHeight * 0.008))
                                         .style("opacity", "0")
                                         .attr("class", "key-text")
                                         .style("font-family", "Roboto")
