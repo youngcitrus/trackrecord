@@ -337,8 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                     // create Sunburst Chart
                     
-                    const sunburstHeight = document.getElementById("sunburst-container").offsetHeight * 0.7;
-                    const sunburstWidth = document.getElementById("sunburst").offsetWidth * 0.7;
+                    const sunburstHeight = document.getElementById("sunburst-container").offsetHeight * .8;
+                    const sunburstWidth = document.getElementById("sunburst").offsetWidth * .8;
 
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
@@ -722,7 +722,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           .tween("scales", function() {
                             let xd = d3.interpolate(sunburstX.domain(), [d.x0, d.x1])
                             let yd = d3.interpolate(sunburstY.domain(), [d.y0, 1])
-                            let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, 350])
+                            let yr = d3.interpolate(sunburstY.range(), [d.y0 ? 10 : 0, sunburstHeight/2])
                             return function(t){ sunburstX.domain(xd(t)); sunburstY.domain(yd(t)).range(yr(t))}
                           })
                           .selectAll("path")
