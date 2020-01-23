@@ -337,8 +337,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                     // create Sunburst Chart
                     
-                    const sunburstHeight = document.getElementById("sunburst-container").offsetHeight * .8;
-                    const sunburstWidth = document.getElementById("sunburst-container").offsetWidth * .8;
+                    const sunburstHeight = document.getElementById("sunburst").offsetHeight;
+                    const sunburstWidth = document.getElementById("sunburst").offsetWidth;
 
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
@@ -370,10 +370,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     const sunburstArea = d3.select("#sunburst").append("svg")
-                      .attr("width", sunburstWidth/0.8)
-                      .attr("height", sunburstHeight/0.8)
+                      .attr("width", sunburstWidth)
+                      .attr("height", sunburstHeight)
                       .append("g")
-                      .attr("transform", "translate(" + ((sunburstWidth/2)/0.8).toString() + ", " + ((sunburstHeight/2)/0.8).toString() + ")")
+                      .attr("transform", "translate(" + ((sunburstWidth/2)).toString() + ", " + ((sunburstHeight/2)).toString() + ")")
                     
 
                     const sunburst = sunburstArea.selectAll('.path')
@@ -866,8 +866,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                 // Scatterplot
-                    const graphHeight = 700;
-                    const graphWidth = 700;
+                    const graphHeight = document.getElementById("scatterplot-container").offsetHeight * .8;
+                    const graphWidth = document.getElementById("scatterplot-container").offsetWidth * .8;
                     const scaleTempo = d3.scaleLinear()
                       .domain([40, 230])
                       .range([0, graphWidth])
@@ -906,7 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       // })
                       .attr("cx", -20)
                       .attr("cy", function(d){
-                        return graphHeight - d.danceability * 700
+                        return graphHeight - d.danceability * graphHeight
                       })
                       .attr("r", function(d){
                         return d.energy * 10
@@ -961,7 +961,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             return scaleTempo(d.tempo)
                           })
                           .attr("cy", function(d){
-                            return graphHeight - d.danceability * 700
+                            return graphHeight - d.danceability * graphHeight
                           })
                         firstTimeNav3 = false;
                       }
