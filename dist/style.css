@@ -124,11 +124,15 @@ svg {
 
 #start-button {
 	width: max-content;
-	height: max-content;
+	/* height: max-content; */
 	padding-left: 0px;
 	cursor: default;
-	
-	/* background: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167)); */
+	background: linear-gradient(217deg, rgb(120, 127, 233), rgb(107, 100, 235));
+	padding-top: 7px;
+	padding-bottom: 7px;
+	padding-left: 12px;
+	padding-right: 12px;
+	border-radius: 15px;
 }
 
 

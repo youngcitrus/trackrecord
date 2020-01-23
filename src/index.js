@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // remove loading dots once API call provides response, replace it with navigation start button
         document.getElementById("loading-dots-1").remove();
 
-        const nav1 = document.createElement("p")
+        const nav1 = document.createElement("span")
         nav1.textContent = "start";
         nav1.setAttribute("id", "start-button")
 
