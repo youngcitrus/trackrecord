@@ -866,11 +866,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                 // Scatterplot
-                    const graphHeight = document.getElementById("scatterplot-container").offsetHeight * .8;
-                    const graphWidth = document.getElementById("scatterplot-container").offsetWidth * .8;
+                    const graphHeight = 600;
+                    const graphWidth = 600;
                     const scaleTempo = d3.scaleLinear()
-                      .domain([40, 230])
+                      .domain([30, 230])
                       .range([0, graphWidth])
+
+                    const scaleDanceability = d3.scaleLinear()
+                      .domain([1,0])
+                      .range([0,graphHeight])
 
                     const scaleValence = d3.scaleLinear()
                       .domain([0,1])
@@ -883,7 +887,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const trackInfoWindow = d3.select("#scatterplot").append("svg")
                       .attr("width", 448)
                       .attr("height", 448)
-                      .attr('x', 700)
+                      .attr('x', 600)
                     
                     const trackTempoText = trackInfoWindow.append("text")
                       .attr('x', 25)
@@ -943,7 +947,24 @@ document.addEventListener('DOMContentLoaded', () => {
                         trackDanceabilityText.text("Danceability: " + d.danceability)
                         
                       })
+                    
+                    const yAxis = graph.append("svg")
+                      .append("g")
+                      .attr("transform", "translate(30,0)")
+                      .call(d3.axisLeft(scaleDanceability))
+                    
 
+                    const xAxis = graph.append("svg")
+                      .append("g")
+                      .attr("transform", "translate(0,580)")
+                      .call(d3.axisBottom(scaleTempo))
+                    // const xAxis = d3.select("#scatterplot").append("svg")
+                    //   .attr("y", -600)
+                    //   .attr("height", 100)
+                    //   .attr("width", 600)
+                    //   .append("g")
+                    //     .call(d3.axisBottom(scaleTempo));    
+                    
                     const nav3 = document.createElement("i")
                     nav3.setAttribute("class","fas fa-angle-down");
                     let firstTimeNav3 = true;

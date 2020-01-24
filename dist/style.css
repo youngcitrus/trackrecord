@@ -26,7 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	overflow: hidden;
+	/* overflow: hidden; */
 }
 ol, ul {
 	list-style: none;
@@ -67,6 +67,7 @@ svg {
 	color: white;
 	background-image: url('track-record-background.jpg');
 	background-size: 100%;
+	min-width: 100%;
 	
 }
 
@@ -177,7 +178,7 @@ svg {
 }
 
 #main-container{
-	min-height: 100%;
+	
 	display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -186,7 +187,8 @@ svg {
 	align-items: center;
 	justify-content: center;
 	position: relative;
-	font-family: 'Roboto'
+	font-family: 'Roboto';
+	min-height: 100%;
 }
 
 #album-art-info{
@@ -233,6 +235,7 @@ iframe {
 	align-items: center;
 	justify-content: center;
 	padding-bottom: 10px;
+	min-height: 100%;
 }
 
 
@@ -266,6 +269,7 @@ iframe {
 	align-items: center;
 	justify-content: center;
 	padding-bottom: 10px;
+	min-height: 100%;
 }
 
 #scatterplot-container{
@@ -280,8 +284,8 @@ iframe {
 }
 
 #scatterplot{
-	width: 1148px;
-	height: 700px;
+	width: 1048px;
+	height: 600px;
 }
 
 .dot{
