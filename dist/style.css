@@ -127,7 +127,7 @@ svg {
 	width: max-content;
 	/* height: max-content; */
 	padding-left: 0px;
-	cursor: default;
+	cursor: pointer;
 	background: linear-gradient(217deg, rgb(120, 127, 233), rgb(107, 100, 235));
 	padding-top: 7px;
 	padding-bottom: 7px;
@@ -142,7 +142,7 @@ svg {
 	height: max-content;
 	position: absolute;
 	bottom: 20;
-	cursor: default;
+	cursor: pointer;
 }
 
 .nav p{
@@ -152,6 +152,7 @@ svg {
 }
 
 .prev {
+	cursor: pointer;
 	color: blue;
 	height: max-content;
 	position: absolute;
@@ -195,6 +196,10 @@ svg {
 	padding-left: 10px;
 }
 
+.album-image{
+	cursor: pointer;
+}
+
 iframe {
     border-radius: 5px;
 }
@@ -209,6 +214,10 @@ iframe {
 
 .key-text{
 	pointer-events: none;
+}
+
+.default-pointer{
+	cursor: default;
 }
 
 #loading-spin{
@@ -257,7 +266,9 @@ iframe {
 	width: 80%;
 	height: 80%;
 	margin: 0 auto;
+	
 }
+
 
 #scatterplot-container-container{
 	display: -webkit-box;

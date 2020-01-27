@@ -152,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr('y', function(d, i){
             return Math.floor(i / 7) * 64
           })
+          .attr('class', 'album-image')
           
           // when clicking album art image, display information and preview
 
@@ -275,6 +276,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (successCounter === 49){
               let audioFeatures = [];
               let numRecursions = Math.floor(trackIds.length/100) + 1;
+              
+              console.log(trackIds)
 
               function fetchAllTracks(ids){
                 if (ids.length === 0) return;
@@ -290,30 +293,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 };
 
                 request.get(tracksOptions, function(error, response, body){
-                  // push API response body (audio features for 100 tracks) into audioFeatures array
-                  audioFeatures.push(body);
-                  if (audioFeatures.length === numRecursions){
-                    // flatten audio features array
-                    let allAudioFeatures = [];
-                    audioFeatures.forEach(part => {
-                      part.audio_features.forEach(datum => {
-                        if (datum) allAudioFeatures.push(datum)
+                  if (!error && response.statusCode === 200){
+                    // push API response body (audio features for 100 tracks) into audioFeatures array
+                    audioFeatures.push(body);
+                    if (audioFeatures.length === numRecursions){
+                      // flatten audio features array
+                      let allAudioFeatures = [];
+                      audioFeatures.forEach(part => {
+                        part.audio_features.forEach(datum => {
+                          if (datum) allAudioFeatures.push(datum)
+                        })
                       })
-                    })
-                    console.log(allAudioFeatures)
+                      console.log(allAudioFeatures)
 
-                    // create navigation button to go back to album image from sunburst chart
-                    const prev2 = document.createElement("i")
-                    prev2.setAttribute("class", "fas fa-angle-up");
-                    prev2Icon = document.getElementById("prev-2-icon");
-                    prev2Icon.appendChild(prev2);
-                    prev2Icon.addEventListener('click', function(){
-                      $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
-                      return false;
-                    })
+                      // create navigation button to go back to album image from sunburst chart
+                      const prev2 = document.createElement("i")
+                      prev2.setAttribute("class", "fas fa-angle-up");
+                      prev2Icon = document.getElementById("prev-2-icon");
+                      prev2Icon.appendChild(prev2);
+                      prev2Icon.addEventListener('click', function(){
+                        $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
+                        return false;
+                      })
 
 
-        //Sunburst Chart
+        
 
                     // initialize data object and key arrays
                     let dataByKey = {};
@@ -372,6 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const sunburstArea = d3.select("#sunburst").append("svg")
                       .attr("width", sunburstWidth)
                       .attr("height", sunburstHeight)
+                      .attr("id","sunburst-svg")
                       .append("g")
                       .attr("transform", "translate(" + ((sunburstWidth/2)).toString() + ", " + ((sunburstHeight/2)).toString() + ")")
                     
@@ -404,7 +409,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                     let level = 0
                     
-                // click function - main interactive aspect of Sunburst
+                    // click function - main interactive aspect of Sunburst
 
                     function click(d){
                       // remove initial instructions
@@ -865,7 +870,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
 
 
-                // Scatterplot
+                    // Scatterplot
                     const graphHeight = 600;
                     const graphWidth = 600;
                     const scaleTempo = d3.scaleLinear()
@@ -1000,8 +1005,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     })
 
                   }
+                } else {
+                  console.log("try again later Spotify isn't working")
+                    const errorMessage = document.createTextNode("Spotify's API isn't responding, try browsing by key later")
+                    
+                    // document.getElementById("loading-dots-2").remove();
 
-                })
+                    nav2Icon = document.getElementById("nav-2-icon");
+                    nav2Icon.append(errorMessage);
+                }
+
+              })
                 // recursive call from fetching all tracks
                 return fetchAllTracks(remaining);
 
@@ -1015,6 +1029,8 @@ document.addEventListener('DOMContentLoaded', () => {
           
         })
       });
+    } else {
+      console.log("not available try again later")
     }
   });
 });
