@@ -278,6 +278,7 @@ document.addEventListener('DOMContentLoaded', () => {
               let numRecursions = Math.floor(trackIds.length/100) + 1;
               
               console.log(trackIds)
+              let errors = false;
 
               function fetchAllTracks(ids){
                 if (ids.length === 0) return;
@@ -1007,12 +1008,14 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                 } else {
                   console.log("try again later Spotify isn't working")
+                  if (errors === false){
                     const errorMessage = document.createTextNode("Spotify's API isn't responding, try browsing by key later")
-                    
-                    // document.getElementById("loading-dots-2").remove();
-
+                    let loadingDots = document.getElementById("loading-dots-2");
+                    if (loadingDots) loadingDots.remove();
                     nav2Icon = document.getElementById("nav-2-icon");
                     nav2Icon.append(errorMessage);
+                    errors = true;
+                  }
                 }
 
               })
