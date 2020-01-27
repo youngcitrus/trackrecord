@@ -417,11 +417,12 @@ document.addEventListener('DOMContentLoaded', () => {
                       if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
                       if (d3.selectAll('.sunburst-artist-text')) d3.selectAll('.sunburst-artist-text').remove();
                       if (d3.selectAll('.sunburst-name-text')) d3.selectAll('.sunburst-name-text').remove();
+                      if (d3.select('#key-level-instructions')) d3.select('#key-level-instructions').remove();
                       // when clicking on an outermost slice
                       if (!d.children){
                         // remove any spotify players and append a new one
                         if (d3.select('#key-player')) d3.select('#key-player').remove();
-
+                        
                         let foreignObject = keyWindow.append('foreignObject')
                           .attr('width', 80)
                           .attr('height', 80)
@@ -434,16 +435,17 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (d.hasInfo){
                           sunburstArea.append("text")
                             .text(d.firstArtist)
-                            .attr('x', -40)
                             .attr('y', 100)
                             .attr('class', 'sunburst-artist-text')
+                            .style('font-family', 'Roboto')
+                            .style('text-anchor', 'middle')
                           
                           sunburstArea.append("text")
                             .text('"' + d.name + '"')
-                            .attr('x', -40)
                             .attr('y', -100)
                             .attr('class', 'sunburst-name-text')
-
+                            .style('font-family', 'Roboto')
+                            .style('text-anchor', 'middle')
                           
                         } else {
                           d3.selectAll('.selectors').on('click',function(){
@@ -470,14 +472,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
                                 sunburstArea.append("text")
                                   .text(d.firstArtist)
-                                  .attr('x', -40)
                                   .attr('y', 100)
                                   .attr('class', 'sunburst-artist-text')
+                                  .style('font-family', 'Roboto')
+                                  .style('text-anchor', 'middle')
+
                                 sunburstArea.append("text")
                                   .text('"' + d.name + '"')
-                                  .attr('x', -40)
                                   .attr('y', -100)
                                   .attr('class', 'sunburst-name-text')
+                                  .style('font-family', 'Roboto')
+                                  .style('text-anchor', 'middle')
+
                                 d3.selectAll('.selectors').on('click', click)
                                 
                               })
@@ -489,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         
                       }
 
-                      // when clicking a mid level slice (key level)
+                    // when clicking a mid level slice (key level)
 
                       if (d.children && d.parent && level !== 1){
                         level = 1
@@ -525,10 +531,11 @@ document.addEventListener('DOMContentLoaded', () => {
                           
                           sunburstArea.append('text')
                             .text(currentKey)
-                            .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
+                            // .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
                             .attr('y', -1 - sunburstHeight * 0.21)
                             .style('font-family', 'Roboto')
                             .style('font-size', 17)
+                            .style('text-anchor', 'middle')
 
                           backButton.text('back')
                             .attr('x', -13.75)
@@ -561,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             let loading = foreignDiv.append('xhtml:div')
                               .attr('id', 'loading-spin')
 
-                        // request Spotify API for information about songs in that key
+                            // request Spotify API for information about songs in that key
                             request.post(authOptions, function(error, response, body){
                               if (!error && response.statusCode === 200){
                                 let token = body.access_token;
@@ -572,9 +579,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                   
                                   if (track.hasInfo){
                                     let artistNameTrack = track.artists[0]
-                                    if (artistNameTrack.length > 17) {
-                                      artistNameTrack = artistNameTrack.slice(0, 17) + "..."
-                                      track.firstArtist = track.firstArtist.slice(0, 17) + "..."
+                                    if (artistNameTrack.length > 14) {
+                                      artistNameTrack = artistNameTrack.slice(0, 14) + "..."
+                                      track.firstArtist = track.firstArtist.slice(0, 14) + "..."
                                     }
 
                                     let rotation
@@ -591,7 +598,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                         return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                       })
                                       .style("text-anchor", "middle")
-                                      .style("font-size", 10)
+                                      //find-me
+                                      .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
                                       .style("opacity", "0")
                                       .attr("class", "key-text")
                                       .style("font-family", "Roboto")
@@ -611,12 +619,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                         d3.select('#root-level').dispatch('click');
                                         setTimeout(showKeyInstructions, 800);
                                       })
-
-                                      sunburstArea.append('text')
-                                        .text('These are new releases in the key of ' + currentKey)
-                                        .style('font-family', 'Roboto')
-                                        .style('font-size', 12)
-                                        .attr('x', sunburstWidth * -0.09)
+                                      backButton.style('cursor', 'pointer');
                                     }
 
                                   } else {
@@ -649,9 +652,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                       track.releaseDate = body.album.release_date
                                       
                                       let artistNameTrack = track.artists[0]
-                                      if (artistNameTrack.length > 17) {
-                                        artistNameTrack = artistNameTrack.slice(0, 17) + "..."
-                                        track.firstArtist = track.firstArtist.slice(0, 17) + "..."
+                                      if (artistNameTrack.length > 14) {
+                                        artistNameTrack = artistNameTrack.slice(0, 14) + "..."
+                                        track.firstArtist = track.firstArtist.slice(0, 14) + "..."
                                       }
 
                                       sunburstArea.append("text")
@@ -660,8 +663,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                           return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                         })
                                         .style("text-anchor", "middle")
-                                        //scale font-size
-                                        .style("font-size", 16 - Math.floor(sunburstHeight * 0.008))
+                                        //find-me
+                                        .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
                                         .style("opacity", "0")
                                         .attr("class", "key-text")
                                         .style("font-family", "Roboto")
@@ -674,15 +677,18 @@ document.addEventListener('DOMContentLoaded', () => {
                                         d3.selectAll('.selectors').on('click', click)
                                         d.loaded = true;
                                         foreignDiv.remove();
-                                        sunburstArea.append('text')
-                                          .text('These are new releases in the key of ' + currentKey)
-                                          .style('font-family', 'Roboto')
-                                          .style('font-size', 12)
-                                          .attr('x', sunburstWidth * -0.09)
+
+                                        // sunburstArea.append('text')
+                                        //   .text('These are new releases in the key of ' + currentKey)
+                                        //   .style('font-family', 'Roboto')
+                                        //   .style('font-size', 12)
+                                        //   .attr('x', sunburstWidth * -0.09)
+
                                         backButton.on('click', function(){
                                           d3.select('#root-level').dispatch('click');
                                           setTimeout(showKeyInstructions, 800);
                                         })
+                                        backButton.style('cursor', 'pointer');
                                       }
                                     })
                                   }
@@ -691,12 +697,16 @@ document.addEventListener('DOMContentLoaded', () => {
                             })
                           }, 650)
                         } else {
+                          //if data is already loaded
                           // make data points clickable, append stored artist information to data points
                           d3.selectAll('.selectors').on('click', click)
+                          console.log('whyyyyy');
+                          // add cursor pointer to back button somehow
                           backButton.on('click', function(){
                             d3.select('#root-level').dispatch('click');
                             setTimeout(showKeyInstructions, 800);
                           })
+
                           
                           setTimeout(function(){
                             d.children.forEach((track, index) => {
@@ -713,8 +723,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                         return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                       })
                                       .style("text-anchor", "middle")
-                                      //scale font size
-                                      .style("font-size", 10)
+                                      //find-me
+                                      .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
                                       .style("opacity", "0")
                                       .attr("class", "key-text")
                                       .style("font-family", "Roboto")
@@ -1009,7 +1019,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 } else {
                   console.log("try again later Spotify isn't working")
                   if (errors === false){
-                    const errorMessage = document.createTextNode("Spotify's API isn't responding, try browsing by key later")
+                    const errorMessage = document.createElement("p")
+                    errorMessage.textContent = "Spotify's API isn't responding, try browsing by key later";
+                    errorMessage.addEventListener("click", function(){
+                      location.reload();
+                    })
                     let loadingDots = document.getElementById("loading-dots-2");
                     if (loadingDots) loadingDots.remove();
                     nav2Icon = document.getElementById("nav-2-icon");
