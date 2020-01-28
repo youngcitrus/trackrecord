@@ -26,7 +26,7 @@ footer, header, hgroup, menu, nav, section {
 }
 body {
 	line-height: 1;
-	/* overflow: hidden; */
+	overflow: hidden;
 }
 ol, ul {
 	list-style: none;
@@ -298,8 +298,13 @@ iframe {
 }
 
 #scatterplot{
-	width: 1048px;
-	height: 600px;
+	width: 1000px;
+	height: 500px;
+	padding: 5px;
+	border: 3px solid transparent;
+    border-image: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167));
+	border-image-slice: 1;
+	line-height: 1.5;
 }
 
 .dot{

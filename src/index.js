@@ -118,7 +118,7 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("y", 300)
           .attr("font-family", "Roboto")
           .attr("font-size", "19px")
-          .on('click', function(){console.log("okfinethen")})
+          // .on('click', function(){console.log("okfinethen")})
 
         const artistText = infoWindow.append('text')
           .attr("x", 10)
@@ -277,7 +277,7 @@ document.addEventListener('DOMContentLoaded', () => {
               let audioFeatures = [];
               let numRecursions = Math.floor(trackIds.length/100) + 1;
               
-              console.log(trackIds)
+              // console.log(trackIds)
               let errors = false;
 
               function fetchAllTracks(ids){
@@ -882,10 +882,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
                     // Scatterplot
-                    const graphHeight = 600;
-                    const graphWidth = 600;
+                    const graphHeight = 500;
+                    const graphWidth = 500;
                     const scaleTempo = d3.scaleLinear()
-                      .domain([30, 230])
+                      .domain([0, 230])
                       .range([0, graphWidth])
 
                     const scaleDanceability = d3.scaleLinear()
@@ -901,19 +901,121 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr("height", graphHeight)
 
                     const trackInfoWindow = d3.select("#scatterplot").append("svg")
-                      .attr("width", 448)
-                      .attr("height", 448)
-                      .attr('x', 600)
+                      .attr("width", graphWidth)
+                      .attr("height", graphHeight)
+                      .attr('x', graphWidth)
                     
+                    const scatterPlotInstructions = trackInfoWindow.append("text")
+                      .text("Organizing the data by Spotify's metrics provides an interesting")
+                      .attr("x", 25)
+                      .attr("y", 30)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+                    
+                    const scatterPlotInstructions2 = trackInfoWindow.append("text")
+                      .text("way to visualize and discover new music.")
+                      .attr("x", 25)
+                      .attr("y", 50)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions3 = trackInfoWindow.append("text")
+                      .text("The x-axis of this graph represents a song's tempo,")
+                      .attr("x", 25)
+                      .attr("y", 85)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions4 = trackInfoWindow.append("text")
+                      .text("measured in beats per minute (BPM) from 20 to 220.")
+                      .attr("x", 25)
+                      .attr("y", 105)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions5 = trackInfoWindow.append("text")
+                      .text("The y-axis of this graph represents the danceability of a song,")
+                      .attr("x", 25)
+                      .attr("y", 140)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions6 = trackInfoWindow.append("text")
+                      .text("how danceable that song is from 0 to 1.")
+                      .attr("x", 25)
+                      .attr("y", 160)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions7 = trackInfoWindow.append("text")
+                      .text("The color of the data point represents the mood of the song -")
+                      .attr("x", 25)
+                      .attr("y", 195)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions8 = trackInfoWindow.append("text")
+                      .text("orange songs are happier, while blue songs are sadder.")
+                      .attr("x", 25)
+                      .attr("y", 215)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions9 = trackInfoWindow.append("text")
+                      .text("The size of the data point represents how much energy the song has,")
+                      .attr("x", 25)
+                      .attr("y", 240)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions10 = trackInfoWindow.append("text")
+                      .text("larger circles have more energy.")
+                      .attr("x", 25)
+                      .attr("y", 260)
+                      .style("text-anchor", "left")
+                      .style("font-family", "Roboto")
+                      .style("font-size", 15)
+
+                    const scatterPlotInstructions11 = trackInfoWindow.append("text")
+                        .text("Click a data point to listen and get more info.")
+                        .attr("x", 25)
+                        .attr("y", 295)
+                        .style("text-anchor", "left")
+                        .style("font-family", "Roboto")
+                        .style("font-size", 15)
+
                     const trackTempoText = trackInfoWindow.append("text")
                       .attr('x', 25)
-                      .attr("y", 25)
+                      .attr("y", 375)
                       .text("")
+                      .style("font-family", "Roboto")
                     
                     const trackDanceabilityText = trackInfoWindow.append("text")
                       .attr('x', 25)
-                      .attr("y", 200)
+                      .attr("y", 400)
                       .text("")
+                      .style("font-family", "Roboto")
+
+                    const trackHappinessText = trackInfoWindow.append("text")
+                      .attr('x', 200)
+                      .attr("y", 375)
+                      .text("")
+                      .style("font-family", "Roboto")
+                    
+                    const trackEnergyText = trackInfoWindow.append("text")
+                      .attr('x', 200)
+                      .attr("y", 400)
+                      .text("")
+                      .style("font-family", "Roboto")
 
                     const dataPoints = graph.selectAll("circle")
                       .data(allAudioFeatures)
@@ -926,7 +1028,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       // })
                       .attr("cx", -20)
                       .attr("cy", function(d){
-                        return graphHeight - d.danceability * graphHeight
+                        return graphHeight - d.danceability * graphHeight - 10
                       })
                       .attr("r", function(d){
                         return d.energy * 10
@@ -934,6 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr("fill", function(d){
                         return scaleValence(d.valence)
                       })
+                      .attr('cursor', 'pointer')
 
                       .on('mouseover', function (d, i) {
                         d3.select(this).transition()
@@ -950,30 +1053,40 @@ document.addEventListener('DOMContentLoaded', () => {
                       .on('click', function (d) {
                         if (d3.select('#track-player')) d3.select('#track-player').remove();
                         let foreignObject = trackInfoWindow.append('foreignObject')
-                          .attr('x', 0)
-                          .attr('y', 370)
-                          .attr('width', 448)
+                          .attr('x', 25)
+                          .attr('y', graphHeight - 80)
+                          .attr('width', graphWidth - 25)
                           .attr('height', 80)
                         let player = foreignObject.append("xhtml:iframe")
                           .attr('id', 'track-player')
                           .attr('src', 'https://open.spotify.com/embed/track/' + d.id)
                           .attr('allow', 'encrypted-media')
 
-                        trackTempoText.text("Tempo: " + d.tempo)
-                        trackDanceabilityText.text("Danceability: " + d.danceability)
+                        trackTempoText.text("Tempo: " + d.tempo);
+                        trackDanceabilityText.text("Danceability: " + d.danceability);
+                        trackHappinessText.text("Happiness: " + d.valence);
+                        trackEnergyText.text("Energy: " + d.energy)
                         
                       })
                     
                     const yAxis = graph.append("svg")
                       .append("g")
-                      .attr("transform", "translate(30,0)")
-                      .call(d3.axisLeft(scaleDanceability))
+                      .attr("transform", "translate(30,10)")
+                      .call(d3.axisLeft(scaleDanceability).tickSize(0))
                     
+                    
+                    const lastYTick = d3.select(yAxis.selectAll('.tick')["_groups"][0][0]);
+                    const firstYTick = d3.select(yAxis.selectAll('.tick')["_groups"][0][10])
+                    firstYTick.attr('visibility', 'hidden')
 
                     const xAxis = graph.append("svg")
                       .append("g")
-                      .attr("transform", "translate(0,580)")
-                      .call(d3.axisBottom(scaleTempo))
+                      .attr("transform", "translate(0," + (graphWidth - 20).toString() +")")
+                      .call(d3.axisBottom(scaleTempo).tickSize(0))
+                    
+
+                    const firstXTick = d3.select(xAxis.selectAll('.tick')["_groups"][0][0])
+                    firstXTick.attr('visibility', 'hidden')
                     // const xAxis = d3.select("#scatterplot").append("svg")
                     //   .attr("y", -600)
                     //   .attr("height", 100)
