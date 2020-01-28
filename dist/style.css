@@ -149,6 +149,7 @@ svg {
 	width: max-content;
 	margin: 0 auto;
 	text-align: center;
+	font-family: 'Roboto';
 }
 
 .prev {
@@ -295,6 +296,7 @@ iframe {
     display: flex;
 	align-items: center;
 	justify-content: center;
+	font-family: 'Roboto';
 }
 
 #scatterplot{
@@ -305,6 +307,14 @@ iframe {
     border-image: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167));
 	border-image-slice: 1;
 	line-height: 1.5;
+}
+
+#scatterplot-instructions{
+	margin: 0 auto;
+	font-family: 'Roboto';
+	height: max-content;
+	width: max-content;
+	padding-top: 30px;
 }
 
 .dot{
