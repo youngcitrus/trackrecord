@@ -265,8 +265,10 @@ iframe {
 }
 
 #sunburst{
-	width: 100%;
-	height: 75%;
+	width: 700;
+	height: 700;
+	min-width: 650;
+	min-height: 650;
 	margin: 0 auto;
 	resize: both;
 
