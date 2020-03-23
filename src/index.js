@@ -344,7 +344,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     const sunburstHeight = document.getElementById("sunburst").offsetHeight;
                     const sunburstWidth = document.getElementById("sunburst").offsetWidth;
-
+                    
                     const sunburstX = d3.scaleLinear()
                       .range([0, 2 * Math.PI])
                     const sunburstY = d3.scaleSqrt()
