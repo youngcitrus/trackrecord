@@ -1,7 +1,8 @@
 
+import { CLIENT_ID, CLIENT_SECRET } from './keys.js';
 const request = require('request');
-const client_id = '2ac94934ad554c1c86adad5ab47d1553'; // Your client id
-const client_secret = 'fc3d2d3ece504bea8f552847bf0b5c44'; // Your secret
+const client_id = CLIENT_ID // Your client id
+const client_secret = CLIENT_SECRET; // Your secret
 
 // refresh page at the top
 window.onbeforeunload = function () {
