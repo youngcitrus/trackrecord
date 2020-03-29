@@ -142,7 +142,7 @@ svg {
 	height: max-content;
 	position: absolute;
 	bottom: 20;
-	cursor: pointer;
+
 }
 
 .nav p{
@@ -150,10 +150,10 @@ svg {
 	margin: 0 auto;
 	text-align: center;
 	font-family: 'Roboto';
+	cursor: pointer;
 }
 
 .prev {
-	cursor: pointer;
 	color: blue;
 	height: max-content;
 	position: absolute;
@@ -161,6 +161,7 @@ svg {
 }
 
 .prev p{
+	cursor: pointer;
 	width: max-content;
 	margin: 0 auto;
 }
