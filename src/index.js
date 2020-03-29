@@ -1,5 +1,5 @@
 
-import { CLIENT_ID, CLIENT_SECRET } from './keys';
+import { CLIENT_ID, CLIENT_SECRET } from 'keys';
 const request = require('request');
 const client_id = CLIENT_ID // Your client id
 const client_secret = CLIENT_SECRET; // Your secret
