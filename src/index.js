@@ -46,7 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       request.get(options, function(error, response, body) {
         
-        console.log(body);
+        // console.log(body);
 
         // remove loading dots once API call provides response, replace it with navigation start button
         document.getElementById("loading-dots-1").remove();
@@ -306,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           if (datum) allAudioFeatures.push(datum)
                         })
                       })
-                      console.log(allAudioFeatures)
+                      // console.log(allAudioFeatures)
 
                       // create navigation button to go back to album image from sunburst chart
                       const prev2 = document.createElement("i")
@@ -701,7 +701,7 @@ document.addEventListener('DOMContentLoaded', () => {
                           //if data is already loaded
                           // make data points clickable, append stored artist information to data points
                           d3.selectAll('.selectors').on('click', click)
-                          console.log('whyyyyy');
+                          
                           // add cursor pointer to back button somehow
                           backButton.on('click', function(){
                             d3.select('#root-level').dispatch('click');
