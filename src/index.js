@@ -283,8 +283,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
               function fetchAllTracks(ids){
                 if (ids.length === 0) return;
-                firstHundred = ids.slice(0, 100);
-                remaining = ids.slice(100)
+                let firstHundred = ids.slice(0, 100);
+                let remaining = ids.slice(100)
                 let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
                 let tracksOptions = {
                 url: tracksUrl,
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       // create navigation button to go back to album image from sunburst chart
                       const prev2 = document.createElement("i")
                       prev2.setAttribute("class", "fas fa-angle-up");
-                      prev2Icon = document.getElementById("prev-2-icon");
+                      const prev2Icon = document.getElementById("prev-2-icon");
                       prev2Icon.appendChild(prev2);
                       prev2Icon.addEventListener('click', function(){
                         $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
@@ -866,7 +866,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     
                     document.getElementById("loading-dots-2").remove();
 
-                    nav2Icon = document.getElementById("nav-2-icon");
+                    const nav2Icon = document.getElementById("nav-2-icon");
                     nav2Icon.append(browseByKeyText);
                     nav2Icon.append(lineBreak)
                     nav2Icon.appendChild(nav2);
@@ -1160,7 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const browseByMetricsText = document.createTextNode("browse by metrics")
                     const br = document.createElement("br")
-                    nav3Icon = document.getElementById("nav-3-icon")
+                    const nav3Icon = document.getElementById("nav-3-icon")
                     nav3Icon.append(browseByMetricsText);
                     nav3Icon.append(br);
                     nav3Icon.appendChild(nav3);
@@ -1185,7 +1185,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     const prev3 = document.createElement("i");
                     prev3.setAttribute("class", "fas fa-angle-up");
-                    prev3Icon = document.getElementById("prev-3-icon");
+                    const prev3Icon = document.getElementById("prev-3-icon");
                     prev3Icon.appendChild(prev3);
                     prev3Icon.addEventListener('click', function(){
                       $('html, body').animate({ scrollTop: $('#sunburst-container').offset().top }, 'slow');
