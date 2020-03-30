@@ -588,7 +588,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                     let rotation
                                     if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
                                     else {
-                                      newIndex = index - d.children.length/2
+                                      let newIndex = index - d.children.length/2
 
                                       rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                                     }
@@ -639,7 +639,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                       
                                       if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
                                       else {
-                                        newIndex = index - d.children.length/2
+                                        let newIndex = index - d.children.length/2
 
                                         rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                                       }
@@ -714,7 +714,7 @@ document.addEventListener('DOMContentLoaded', () => {
                               let rotation
                               if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
                               else {
-                                newIndex = index - d.children.length/2
+                                let newIndex = index - d.children.length/2
 
                                 rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                               }
