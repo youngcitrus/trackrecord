@@ -841,7 +841,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     showKeyInstructions();
 
-                    // 
                     sunburst.append("text")
                         .text(function(d){ 
                           if (d.parent === null) return ""
