@@ -412,10 +412,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     let level = 0
                     
                     // click function - main interactive aspect of Sunburst
-
+                    
                     function click(d){
                       // remove initial instructions
-                      if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
+                      if (d.parent) {
+                        if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
+                      }
+                      
                       if (d3.selectAll('.sunburst-artist-text')) d3.selectAll('.sunburst-artist-text').remove();
                       if (d3.selectAll('.sunburst-name-text')) d3.selectAll('.sunburst-name-text').remove();
                       if (d3.select('#key-level-instructions')) d3.select('#key-level-instructions').remove();

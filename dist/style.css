@@ -325,3 +325,12 @@ iframe {
 .dot{
 	margin: 0 auto;
 }
+
+#key-instructions {
+	cursor: default;
+	pointer-events: none;
+}
+
+#root-level {
+	cursor: default;
+}
