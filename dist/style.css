@@ -178,6 +178,7 @@ svg {
     border-image: linear-gradient(217deg, rgb(255, 167, 167), rgb(86, 249, 252));
 	border-image-slice: 1;
 	line-height: 1.5;
+	background-color: white;
 }
 
 #main-container{
@@ -192,6 +193,7 @@ svg {
 	position: relative;
 	font-family: 'Roboto';
 	min-height: 100%;
+	background-image: linear-gradient(to bottom right, rgb(252, 246, 238), rgb(249, 242, 249));
 }
 
 #album-art-info{
@@ -261,7 +263,7 @@ iframe {
 	justify-content: center;
 	padding-bottom: 10px;
 	margin: 0 auto;
-	/* width: 80%; */
+	background-image: linear-gradient(to bottom right, rgb(252, 246, 238), rgb(249, 242, 249));
 	
 }
 
@@ -302,6 +304,7 @@ iframe {
 	align-items: center;
 	justify-content: center;
 	font-family: 'Roboto';
+	background-image: linear-gradient(to bottom right, rgb(252, 246, 238), rgb(249, 242, 249));
 }
 
 #scatterplot{
@@ -311,6 +314,7 @@ iframe {
 	border: 3px solid transparent;
     border-image: linear-gradient(217deg, rgb(86, 249, 252), rgb(255, 167, 167));
 	border-image-slice: 1;
+	background-color: white;
 	line-height: 1.5;
 }
 
