@@ -290,21 +290,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 let remaining = ids.slice(100)
                 let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
                 let tracksOptions = {
-                url: tracksUrl,
-                headers: {
-                  'Authorization': 'Bearer ' + token
-                  },
-                json: true
+                  url: tracksUrl,
+                  headers: {
+                    'Authorization': 'Bearer ' + token
+                    },
+                  json: true
                 };
 
                 request.get(tracksOptions, function(error, response, body){
                   if (!error && response.statusCode === 200){
                     // push API response body (audio features for 100 tracks) into audioFeatures array
                     audioFeatures.push(body);
-                    if (audioFeatures.length === numRecursions){
+                    if (audioFeatures.length === numRecursions || audioFeatures.length > 2){
                       // flatten audio features array
                       let allAudioFeatures = [];
                       audioFeatures.forEach(part => {
+                        // console.log(part);
                         part.audio_features.forEach(datum => {
                           if (datum) allAudioFeatures.push(datum)
                         })
@@ -1221,7 +1222,6 @@ document.addEventListener('DOMContentLoaded', () => {
               }
 
               fetchAllTracks(trackIds);
-
             }
 
           });
