@@ -280,12 +280,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (successCounter === 49){
               let audioFeatures = [];
               let numRecursions = Math.floor(trackIds.length/100) + 1;
-              
+              let numCompleted = 0;
               // console.log(trackIds)
               let errors = false;
-
+              
               function fetchAllTracks(ids){
-                if (ids.length === 0) return;
+                if (ids.length === 0 || numCompleted > 2) return;
                 let firstHundred = ids.slice(0, 100);
                 let remaining = ids.slice(100)
                 let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
@@ -1198,7 +1198,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         return false;
                       })
                     }
-                  } else {
+                  } else { // if response is not 200
                     console.log("try again later Spotify isn't working")
                     if (errors === false){
                       const errorMessage = document.createElement("p")
@@ -1216,6 +1216,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 })
                 // recursive call from fetching all tracks
+                numCompleted += 1;
                 return fetchAllTracks(remaining);
 
               }
