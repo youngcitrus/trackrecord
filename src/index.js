@@ -251,7 +251,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // make API call to get tracks from all 49 albums
         let successCounter = 0
         
-        body.albums.items.forEach((album) => {
+        for (let i=0; i<body.albums.items.length; i++) {
+
+        
+          let album = body.albums.items[i];
           let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
           let albumOptions = {
             url: albumUrl,
@@ -1223,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           });
           
-        })
+        }
       });
     } else {
       console.log("not available try again later")
