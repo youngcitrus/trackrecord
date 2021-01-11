@@ -285,7 +285,7 @@ document.addEventListener('DOMContentLoaded', () => {
               let errors = false;
               
               function fetchAllTracks(ids){
-                if (ids.length === 0 || numCompleted > 2) return;
+                if (ids.length === 0 || numCompleted > 1) return;
                 let firstHundred = ids.slice(0, 100);
                 let remaining = ids.slice(100)
                 let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   if (!error && response.statusCode === 200){
                     // push API response body (audio features for 100 tracks) into audioFeatures array
                     audioFeatures.push(body);
-                    if (audioFeatures.length === numRecursions || audioFeatures.length > 2){
+                    if (audioFeatures.length === numRecursions || audioFeatures.length > 1){
                       // flatten audio features array
                       let allAudioFeatures = [];
                       audioFeatures.forEach(part => {
