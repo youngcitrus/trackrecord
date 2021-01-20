@@ -41,9 +41,6 @@ document.addEventListener('DOMContentLoaded', () => {
         json: true
       };
 
-      // will store trackIds in array below
-      const trackIds = [];
-
       request.get(options, function(error, response, body) {
         
         console.log(body);
@@ -251,11 +248,10 @@ document.addEventListener('DOMContentLoaded', () => {
         // make API call to get tracks from a playlist: 
         
         
-        let album = body.albums.items[i];
-        let albumUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/albums/' + album.id + '/tracks';
-        //37i9dQZF1DX4JAvHpjipBk?si=chT5oEtWQFeOpDAt19j_4Q
-        let albumOptions = {
-          url: albumUrl,
+        let playlistUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/playlists/3WxTnGherpf7t4F0VzchD4/tracks';
+        
+        let playlistOptions = {
+          url: playlistUrl,
           headers: {
             'Authorization': 'Bearer ' + token
           },
@@ -263,14 +259,15 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         // request tracks for each album
-        request.get(albumOptions, function(error, response, body){
-
-          body.items.forEach(track => {
-            // push track IDs in API response into trackIds array
-            trackIds.push(track.id)
-          });
-
-          successCounter += 1;
+        request.get(playlistOptions, function(error, response, body){
+          // will store trackIds in array below
+          const trackIds = [];
+          // body.items.forEach(track => {
+          //   // push track IDs in API response into trackIds array
+          //   trackIds.push(track.id)
+          // });
+          console.log(body);
+          
           
           // when finished grabbing all trackIDs, recursively request all audio features from each track ID
           // 100 tracks at a time, until there are no more tracks remaining
