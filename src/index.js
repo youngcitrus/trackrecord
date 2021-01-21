@@ -248,7 +248,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // make API call to get tracks from a playlist: 
         
         
-        let playlistUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/playlists/3WxTnGherpf7t4F0VzchD4/tracks';
+        let playlistUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks';
         
         let playlistOptions = {
           url: playlistUrl,
@@ -258,22 +258,36 @@ document.addEventListener('DOMContentLoaded', () => {
           json: true
         };
 
-        // request tracks for each album
+        
         request.get(playlistOptions, function(error, response, body){
           // will store trackIds in array below
           const trackIds = [];
-          // body.items.forEach(track => {
-          //   // push track IDs in API response into trackIds array
-          //   trackIds.push(track.id)
-          // });
-          console.log(body);
+          body.items.forEach(item => {
+            // push track IDs in API response into trackIds array
+            trackIds.push(item.track.id);
+          });
+          // console.log(trackIds);
           
           
-          // when finished grabbing all trackIDs, recursively request all audio features from each track ID
-          // 100 tracks at a time, until there are no more tracks remaining
+          // get next 100 track ids
+          let playlistUrl2 = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks?offset=100';
+          let playlistOptions2 = {
+            url: playlistUrl,
+            headers: {
+              'Authorization': 'Bearer ' + token
+            },
+            json: true
+          };
 
-          if (successCounter === 49){
+          request.get(playlistOptions2, function(error, response, body){
+            body.items.forEach(item => {
+              // push track IDs in API response into trackIds array
+              trackIds.push(item.track.id);
+            });
+            console.log(trackIds);
+            
             let audioFeatures = [];
+            
             let numRecursions = Math.floor(trackIds.length/100) + 1;
             let numCompleted = 0;
             // console.log(trackIds)
@@ -1217,7 +1231,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             fetchAllTracks(trackIds);
-          }
+          });
 
         });
           
