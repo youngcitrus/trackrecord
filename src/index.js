@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       request.get(options, function(error, response, body) {
         
-        console.log(body);
+        // console.log(body);
 
         // remove loading dots once API call provides response, replace it with navigation start button
         document.getElementById("loading-dots-1").remove();
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
               // push track IDs in API response into trackIds array
               trackIds.push(item.track.id);
             });
-            console.log(trackIds);
+            // console.log(trackIds);
             
             let audioFeatures = [];
             
