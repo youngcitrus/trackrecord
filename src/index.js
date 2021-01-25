@@ -282,7 +282,7 @@ document.addEventListener('DOMContentLoaded', () => {
           // get next 100 track ids
           let playlistUrl2 = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks?offset=100';
           let playlistOptions2 = {
-            url: playlistUrl,
+            url: playlistUrl2,
             headers: {
               'Authorization': 'Bearer ' + token
             },
@@ -358,10 +358,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       $('html, body').animate({ scrollTop: $('#main-container').offset().top }, 'slow');
                       return false;
                     })
-
-
       
-
                     // initialize data object and key arrays
                     let dataByKey = {};
                     const keys = ["C", "Db/C#", "D", "Eb", "E", "F", "Gb/F#", "G", "Ab", "A", "Bb", "B"]
@@ -895,7 +892,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       .style("font-family", "Roboto")
                       .style("font-weight", "bold")
                       .style("fill","#1286FE")
-
+                    
                     const dataPoints = graph.selectAll("circle")
                       .data(allAudioFeatures)
 
