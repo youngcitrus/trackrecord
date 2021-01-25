@@ -258,13 +258,23 @@ document.addEventListener('DOMContentLoaded', () => {
           json: true
         };
 
+        let allTrackData = [];
         
         request.get(playlistOptions, function(error, response, body){
           // will store trackIds in array below
+          console.log(body);
           const trackIds = [];
           body.items.forEach(item => {
             // push track IDs in API response into trackIds array
             trackIds.push(item.track.id);
+            const trackObject = {
+                                  'artists': item.track.artists,
+                                  'images': item.track.album.images,
+                                  'name': item.track.name,
+                                  'id': item.track.id
+                                };
+            allTrackData.push(trackObject);
+
           });
           // console.log(trackIds);
           
@@ -283,6 +293,13 @@ document.addEventListener('DOMContentLoaded', () => {
             body.items.forEach(item => {
               // push track IDs in API response into trackIds array
               trackIds.push(item.track.id);
+              const trackObject = {
+                'artists': item.track.artists,
+                'images': item.track.album.images,
+                'name': item.track.name,
+                'id': item.track.id
+              };
+              allTrackData.push(trackObject);
             });
             // console.log(trackIds);
             
@@ -307,19 +324,30 @@ document.addEventListener('DOMContentLoaded', () => {
               };
 
               request.get(tracksOptions, function(error, response, body){
+                
                 if (!error && response.statusCode === 200){
                   // push API response body (audio features for 100 tracks) into audioFeatures array
                   audioFeatures.push(body);
                   if (audioFeatures.length === numRecursions || audioFeatures.length > 1){
                     // flatten audio features array
                     let allAudioFeatures = [];
+                    // let offset = numCompleted * 100;
                     audioFeatures.forEach(part => {
-                      // console.log(part);
+                      console.log(part);
                       part.audio_features.forEach(datum => {
-                        if (datum) allAudioFeatures.push(datum)
+                        if (datum) {
+                          allAudioFeatures.push(datum)
+                        }
                       })
                     })
-                    // console.log(allAudioFeatures)
+
+                    allTrackData = allTrackData.map((el, i) => {
+                      return {...el, ...allAudioFeatures[i]}
+                    });
+                    console.log('-------');
+                    console.log(allTrackData);
+                    console.log('-------');
+                    
 
                     // create navigation button to go back to album image from sunburst chart
                     const prev2 = document.createElement("i")
@@ -340,15 +368,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     const circleOfFifths = ["C", "G", "D", "A", "E", "B", "Gb/F#", "Db/C#", "Ab", "Eb", "Bb", "F"]
                     
                     // push tracks into data object, organized in order of Circle of Fifths
-                    allAudioFeatures.forEach((track) => {
+                    allTrackData.forEach((track) => {
                       let key = keys[track.key]
                       let order = circleOfFifths.indexOf(key);
                       if (!dataByKey[order]) {    
                         dataByKey[order] = []
                       }
-                      dataByKey[order].push(track)
-                      })
-
+                      dataByKey[order].push(track);
+                    });
+                    console.log(dataByKey)                    
                     // let colors = d3.scaleOrdinal()
                     //   .domain(dataByKey)
                     //   .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
@@ -381,12 +409,13 @@ document.addEventListener('DOMContentLoaded', () => {
                     root.children.forEach(child => {
                       child.children.forEach(track => {track.size = sunburstY(child.size)})
                     })
-
+                    
+                    
                     root = d3.hierarchy(root)
                       .sum(function(d){ 
                         if (d.size) return d.size
                       })
-
+                    
 
                     const sunburstArea = d3.select("#sunburst").append("svg")
                       .attr("width", sunburstWidth)
@@ -449,66 +478,22 @@ document.addEventListener('DOMContentLoaded', () => {
                           .attr('allow', 'encrypted-media')
                           .style('border-radius','20px')
                         
-                        if (d.hasInfo){
-                          sunburstArea.append("text")
-                            .text(d.firstArtist)
-                            .attr('y', 100)
-                            .attr('class', 'sunburst-artist-text')
-                            .style('font-family', 'Roboto')
-                            .style('text-anchor', 'middle')
+                        console.log(d);
+                        sunburstArea.append("text")
+                          .text(d.data.artists[0].name.length <= 14 ? d.data.artists[0].name : d.data.artists[0].name.slice(0, 14) + "...")
+                          .attr('y', 100)
+                          .attr('class', 'sunburst-artist-text')
+                          .style('font-family', 'Roboto')
+                          .style('text-anchor', 'middle')
+                        
+                        sunburstArea.append("text")
+                          .text('"' + d.data.name + '"')
+                          .attr('y', -100)
+                          .attr('class', 'sunburst-name-text')
+                          .style('font-family', 'Roboto')
+                          .style('text-anchor', 'middle')
                           
-                          sunburstArea.append("text")
-                            .text('"' + d.name + '"')
-                            .attr('y', -100)
-                            .attr('class', 'sunburst-name-text')
-                            .style('font-family', 'Roboto')
-                            .style('text-anchor', 'middle')
-                          
-                        } else {
-                          d3.selectAll('.selectors').on('click',function(){
-                            d3.select(this).on('click', null);
-                          });
-                          request.post(authOptions, function(error, response, body){
-                            if (!error && response.statusCode === 200){
-                              let token = body.access_token;
-                              let options = {
-                                url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + d.data.id,
-                                headers: {
-                                  'Authorization': 'Bearer ' + token
-                                },
-                                json: true
-                              };
-                              request.get(options, function(error, response, body){
-                                d.hasInfo = true
-                                d.name = body.name
-                                d.artists = []
-                                body.artists.forEach(artist => {d.artists.push(artist.name)})
-                                d.firstArtist = d.artists[0]
-                                d.albumName = body.album.name
-                                d.releaseDate = body.album.release_date
-
-                                sunburstArea.append("text")
-                                  .text(d.firstArtist)
-                                  .attr('y', 100)
-                                  .attr('class', 'sunburst-artist-text')
-                                  .style('font-family', 'Roboto')
-                                  .style('text-anchor', 'middle')
-
-                                sunburstArea.append("text")
-                                  .text('"' + d.name + '"')
-                                  .attr('y', -100)
-                                  .attr('class', 'sunburst-name-text')
-                                  .style('font-family', 'Roboto')
-                                  .style('text-anchor', 'middle')
-
-                                d3.selectAll('.selectors').on('click', click)
-                                
-                              })
-
-
-                            }
-                          })
-                        }
+                        
                         
                       }
 
@@ -568,190 +553,44 @@ document.addEventListener('DOMContentLoaded', () => {
                             return (data.parent && data.children) ? 0 : 1
                           });
                         
-                        // disable clickability of all data points until all have loaded
-                        d3.selectAll('.selectors').on('click',function(){
-                          d3.select(this).on('click', null);
-                        });
+                        
+                        console.log(d);
+                      
+                        d3.selectAll('.selectors').on('click', click)
+                        
+                        backButton.on('click', function(){
+                          d3.select('#root-level').dispatch('click');
+                          setTimeout(showKeyInstructions, 800);
+                        })
+                          
+                        setTimeout(function(){
+                          d.children.forEach((track, index) => {
+                            let rotation
+                            if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
+                            else {
+                              let newIndex = index - d.children.length/2
 
-                        // create a loading spinner while songs load
-                        if (!d.loaded){
-                          setTimeout(function(){
-                            let foreignDiv = sunburstArea.append('foreignObject')
-                              .attr('x', -14)
-                              .attr('y', -14)
-                              .attr('width', 35)
-                              .attr('height', 35)
-                            
-                            let loading = foreignDiv.append('xhtml:div')
-                              .attr('id', 'loading-spin')
-
-                            // request Spotify API for information about songs in that key
-                            request.post(authOptions, function(error, response, body){
-                              if (!error && response.statusCode === 200){
-                                let token = body.access_token;
-                                
-                                let successTrack = 0
-
-                                d.children.forEach((track, index) => {
-                                  
-                                  if (track.hasInfo){
-                                    let artistNameTrack = track.artists[0]
-                                    if (artistNameTrack.length > 14) {
-                                      artistNameTrack = artistNameTrack.slice(0, 14) + "..."
-                                      track.firstArtist = track.firstArtist.slice(0, 14) + "..."
-                                    }
-
-                                    let rotation
-                                    if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
-                                    else {
-                                      let newIndex = index - d.children.length/2
-
-                                      rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
-                                    }
-                                    // append artist names to data points
-                                    sunburstArea.append("text")
-                                      .text(artistNameTrack)
-                                      .attr("transform", function() {
-                                        return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
-                                      })
-                                      .style("text-anchor", "middle")
-                                      //find-me
-                                      .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
-                                      .style("opacity", "0")
-                                      .attr("class", "key-text")
-                                      .style("font-family", "Roboto")
-                                        .transition()
-                                        .duration(100)
-                                        .style('opacity', "1")
-
-                                    successTrack += 1
-                                    if (successTrack === d.children.length) {
-                                      // data now loaded! make data points clickable, remove loading spinner
-                                      d3.selectAll('.selectors').on('click', click)
-                                      d.loaded = true;
-                                      
-                                      foreignDiv.remove();
-                                      
-                                      backButton.on('click', function(){
-                                        d3.select('#root-level').dispatch('click');
-                                        setTimeout(showKeyInstructions, 800);
-                                      })
-                                      backButton.style('cursor', 'pointer');
-                                    }
-
-                                  } else {
-                                    let options = {
-                                      url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/tracks/' + track.data.id,
-                                      headers: {
-                                        'Authorization': 'Bearer ' + token
-                                      },
-                                      json: true
-                                    };
-                                    
-                                    request.get(options, function(error, response, body){
-
-                                      // append artist information to data slice
-                                      let rotation
-                                      
-                                      if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
-                                      else {
-                                        let newIndex = index - d.children.length/2
-
-                                        rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
-                                      }
-                                      
-                                      track.hasInfo = true
-                                      track.name = body.name
-                                      track.artists = []
-                                      body.artists.forEach(artist => {track.artists.push(artist.name)})
-                                      track.firstArtist = track.artists[0]
-                                      track.albumName = body.album.name
-                                      track.releaseDate = body.album.release_date
-                                      
-                                      let artistNameTrack = track.artists[0]
-                                      if (artistNameTrack.length > 14) {
-                                        artistNameTrack = artistNameTrack.slice(0, 14) + "..."
-                                        track.firstArtist = track.firstArtist.slice(0, 14) + "..."
-                                      }
-
-                                      sunburstArea.append("text")
-                                        .text(artistNameTrack)
-                                        .attr("transform", function() {
-                                          return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
-                                        })
-                                        .style("text-anchor", "middle")
-                                        //find-me
-                                        .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
-                                        .style("opacity", "0")
-                                        .attr("class", "key-text")
-                                        .style("font-family", "Roboto")
-                                          .transition()
-                                          .duration(100)
-                                          .style('opacity', "1")
-                                      successTrack += 1
-                                      if (successTrack === d.children.length) {
-                                        // data now loaded! make data points clickable, remove loading spinner
-                                        d3.selectAll('.selectors').on('click', click)
-                                        d.loaded = true;
-                                        foreignDiv.remove();
-
-                                        // sunburstArea.append('text')
-                                        //   .text('These are new releases in the key of ' + currentKey)
-                                        //   .style('font-family', 'Roboto')
-                                        //   .style('font-size', 12)
-                                        //   .attr('x', sunburstWidth * -0.09)
-
-                                        backButton.on('click', function(){
-                                          d3.select('#root-level').dispatch('click');
-                                          setTimeout(showKeyInstructions, 800);
-                                        })
-                                        backButton.style('cursor', 'pointer');
-                                      }
+                              rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
+                            }
+                            console.log(track);
+                            sunburstArea.append("text")
+                              .text(track.data.artists[0].name.length <= 14 ? track.data.artists[0].name : track.data.artists[0].name.slice(0,14) + "...")
+                                    .attr("transform", function() {
+                                      return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
                                     })
-                                  }
-                                })
-                              }
-                            })
-                          }, 650)
-                        } else {
-                          //if data is already loaded
-                          // make data points clickable, append stored artist information to data points
-                          d3.selectAll('.selectors').on('click', click)
-                          
-                          // add cursor pointer to back button somehow
-                          backButton.on('click', function(){
-                            d3.select('#root-level').dispatch('click');
-                            setTimeout(showKeyInstructions, 800);
+                                    .style("text-anchor", "middle")
+
+                                    .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
+                                    .style("opacity", "0")
+                                    .attr("class", "key-text")
+                                    .style("font-family", "Roboto")
+                                      .transition()
+                                      .duration(100)
+                                      .style('opacity', "1")
+
                           })
-
-                          
-                          setTimeout(function(){
-                            d.children.forEach((track, index) => {
-                              let rotation
-                              if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
-                              else {
-                                let newIndex = index - d.children.length/2
-
-                                rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
-                              }
-                              sunburstArea.append("text")
-                                      .text(track.firstArtist)
-                                      .attr("transform", function() {
-                                        return ( "translate(" + sunburstArc.centroid(d.children[index]) + ") rotate(" + rotation.toString() +")")
-                                      })
-                                      .style("text-anchor", "middle")
-                                      //find-me
-                                      .style("font-size", 7.5 + Math.floor(sunburstHeight * 0.01))
-                                      .style("opacity", "0")
-                                      .attr("class", "key-text")
-                                      .style("font-family", "Roboto")
-                                        .transition()
-                                        .duration(100)
-                                        .style('opacity', "1")
-
-                            })
-                          }, 700)
-                        }
+                        }, 700)
+                        
 
                       }
                       
@@ -856,7 +695,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     showKeyInstructions();
-
+                    // display key label on level 1 key slices
                     sunburst.append("text")
                         .text(function(d){ 
                           if (d.parent === null) return ""
