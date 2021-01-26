@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //request auth token from Spotify API
 
   const authOptions = {
-      url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
+      url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
         "access-control-allow-origin": "*"
