@@ -16,10 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
   //request auth token from Spotify API
 
   const authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
+      url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
-        "access-control-allow-origin": "youngcitrus.github.io"
           },
 
       form: {
@@ -36,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let token = body.access_token;
       let options = {
-        url: 'https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks',
+        url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks',
         headers: {
           'Authorization': 'Bearer ' + token
         },
