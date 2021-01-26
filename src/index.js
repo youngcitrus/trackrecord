@@ -18,8 +18,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const authOptions = {
       url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
       headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
+        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
+        "access-control-allow-origin": "*"
           },
+
       form: {
         grant_type: 'client_credentials'
           },
@@ -34,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       let token = body.access_token;
       let options = {
-        url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks',
+        url: 'https://api.spotify.com/v1/playlists/3WxTnGherpf7t4F0VzchD4/tracks',
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -1082,7 +1084,6 @@ document.addEventListener('DOMContentLoaded', () => {
         
       });
     } else {
-      console.log('yo');
       console.log(response);
       console.log("not available try again later")
     }
