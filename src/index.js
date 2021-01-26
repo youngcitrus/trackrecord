@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', () => {
         .text("to browse new releases by key.")
 
         const showArtInstructions = function(){
-          albumArtInstructions.text("Browsing album art provides a visual way to discover")
+          albumArtInstructions.text("Browsing by album art provides a visual way to discover")
           albumArtInstructions2.text("new music. Click an image to listen and get more details.")
           albumArtInstructions3.text("When ready, click the arrow below")
           albumArtInstructions4.text("to browse new releases by key.")
@@ -466,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       
                       console.log(d);
                       sunburstArea.append("text")
-                        .text(d.data.artists[0].name.length <= 14 ? d.data.artists[0].name : d.data.artists[0].name.slice(0, 14) + "...")
+                        .text(d.data.artists[0].name)
                         .attr('y', 100)
                         .attr('class', 'sunburst-artist-text')
                         .style('font-family', 'Roboto')
