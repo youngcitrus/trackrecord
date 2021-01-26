@@ -141,9 +141,9 @@ document.addEventListener('DOMContentLoaded', () => {
           .attr("y", 340)
           .attr("font-family", "Roboto")
           .attr("font-size", "16px")
-        console.log('yo');
-        console.log(allTrackData);
-        console.log('yo');
+        
+        // console.log(allTrackData);
+        
 
         // map data from API response to images using D3 
         let artwork = svg.selectAll("image")
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         request.get(playlistOptions, function(error, response, body){
           // will store trackIds in array below
-          console.log(body);
+          // console.log(body);
           
           body.items.forEach(item => {
             // push track IDs in API response into trackIds array
@@ -333,9 +333,9 @@ document.addEventListener('DOMContentLoaded', () => {
                   allTrackData = allTrackData.map((el, i) => {
                     return {...el, ...allAudioFeatures[i]}
                   });
-                  console.log('-------');
-                  console.log(allTrackData);
-                  console.log('-------');
+                  // console.log('-------');
+                  // console.log(allTrackData);
+                  // console.log('-------');
                   
 
                   // create navigation button to go back to album image from sunburst chart
@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     dataByKey[order].push(track);
                   });
-                  console.log(dataByKey)                    
+                  // console.log(dataByKey)                    
                   // let colors = d3.scaleOrdinal()
                   //   .domain(dataByKey)
                   //   .range(["#8dd3c7","#ffffb3","#bebada","#fb8072","#80b1d3","#fdb462","#b3de69","#fccde5","#d9d9d9","#bc80bd","#ccebc5","#ffed6f"]);
@@ -465,7 +465,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         .attr('allow', 'encrypted-media')
                         .style('border-radius','20px')
                       
-                      console.log(d);
+                      console.log(d.data.key);
                       sunburstArea.append("text")
                         .text(d.data.artists[0].name)
                         .attr('y', 100)
@@ -474,7 +474,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         .style('text-anchor', 'middle')
                       
                       sunburstArea.append("text")
-                        .text('"' + d.data.name + '"')
+                        .text(d.data.name.length < 30 ? '"' + d.data.name + '"' : '"' + d.data.name.slice(0,30) + "..." + '"')
                         .attr('y', -100)
                         .attr('class', 'sunburst-name-text')
                         .style('font-family', 'Roboto')
@@ -521,8 +521,6 @@ document.addEventListener('DOMContentLoaded', () => {
                           return (data.parent && data.children) ? 0 : 1
                         });
                       
-                      
-                      console.log(d);
                     
                       d3.selectAll('.selectors').on('click', click)
                       
@@ -579,7 +577,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                             rotation = -90 + ((newIndex + 0.5) / d.children.length) * 360
                           }
-                          console.log(track);
+                          // console.log(track);
                           sunburstArea.append("text")
                             .text(track.data.artists[0].name.length <= 14 ? track.data.artists[0].name : track.data.artists[0].name.slice(0,14) + "...")
                                   .attr("transform", function() {
