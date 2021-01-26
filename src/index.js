@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
       url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
-        "access-control-allow-origin": "*"
+        "access-control-allow-origin": "youngcitrus.github.io"
           },
 
       form: {
