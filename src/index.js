@@ -1082,6 +1082,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
       });
     } else {
+      console.log('yo');
+      console.log(response);
       console.log("not available try again later")
     }
   });
