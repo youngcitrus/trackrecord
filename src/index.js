@@ -445,11 +445,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     // remove initial instructions
                     if (d.parent) {
                       if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
+                      
                     }
                     
                     if (d3.selectAll('.sunburst-artist-text')) d3.selectAll('.sunburst-artist-text').remove();
                     if (d3.selectAll('.sunburst-name-text')) d3.selectAll('.sunburst-name-text').remove();
-                    if (d3.select('#key-level-instructions')) d3.select('#key-level-instructions').remove();
+                    if (d3.selectAll('.key-level-instructions')) d3.selectAll('.key-level-instructions').remove();
                     // when clicking on an outermost slice
                     if (!d.children){
                       // remove any spotify players and append a new one
@@ -513,25 +514,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         .remove()
                       const backButton = sunburstArea.append('text')
                       let currentKey = keys[d.children[0].data.key];
-                      
-                      setTimeout(function(){
-                        // add key name and back button to data points
-                        
-                        sunburstArea.append('text')
-                          .text(currentKey)
-                          // .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
-                          .attr('y', -1 - sunburstHeight * 0.21)
-                          .style('font-family', 'Roboto')
-                          .style('font-size', 17)
-                          .style('text-anchor', 'middle')
-
-                        backButton.text('back')
-                          .attr('x', -13.75)
-                          .attr('y', sunburstHeight * 0.24)
-                          .style('cursor', 'default')
-                          .style('font-family', 'Roboto')
-                          .style('font-size', 14)
-                      }, 200)
 
                       // remove stroke from key level data points
                       sunburstArea.selectAll('path')
@@ -550,6 +532,45 @@ document.addEventListener('DOMContentLoaded', () => {
                       })
                         
                       setTimeout(function(){
+                        sunburstArea.append('text')
+                          .text(currentKey)
+                          // .attr('x', -7 - 4.15*(keys[d.children[0].data.key].length - 1))
+                          .attr('class', 'key-level-instructions')
+                          .attr('y', -1 - sunburstHeight * 0.21)
+                          .style('font-family', 'Roboto')
+                          .style('font-size', 17)
+                          .style('text-anchor', 'middle')
+
+                        sunburstArea.append('text')
+                          .text('These are popular releases in the key of ' + currentKey)
+                          .attr('class', 'key-level-instructions')
+                          .style('font-family', 'Roboto')
+                          .style('font-size', 14)
+                          // .attr('x', sunburstWidth * -0.15)
+                          .attr('x', -130)
+                          .attr('y', -15);
+                        sunburstArea.append('text')
+                          .text('Click on an outer slice')
+                          .attr('class', 'key-level-instructions')
+                          .style('font-family', 'Roboto')
+                          .style('font-size', 14)
+                          .attr('x', -65)
+                          .attr('y', 10);
+                        sunburstArea.append('text')
+                          .text('to listen to a preview of the song.')
+                          .attr('class', 'key-level-instructions')
+                          .style('font-family', 'Roboto')
+                          .style('font-size', 14)
+                          .attr('x', -100)
+                          .attr('y', 35);
+
+                        backButton.text('back')
+                          .attr('x', -13.75)
+                          .attr('y', sunburstHeight * 0.24)
+                          .style('cursor', 'pointer')
+                          .style('font-family', 'Roboto')
+                          .style('font-size', 14)
+
                         d.children.forEach((track, index) => {
                           let rotation
                           if (index < d.children.length / 2) rotation = -90 + ((index + 0.5) / d.children.length) * 360
