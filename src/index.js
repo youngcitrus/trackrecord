@@ -902,7 +902,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .style("fill","#1286FE")
                   
                   const dataPoints = graph.selectAll("circle")
-                    .data(allAudioFeatures)
+                    .data(allTrackData)
 
                   dataPoints.enter()
                     .append("circle")
