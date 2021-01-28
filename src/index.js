@@ -1036,7 +1036,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const nav3 = document.createElement("i");
                 nav3.setAttribute("class", "fas fa-angle-down");
                 let firstTimeNav3 = true;
-
+                
                 const browseByMetricsText = document.createTextNode("browse by metrics")
                 const br = document.createElement("br")
                 const nav3Icon = document.getElementById("nav-3-icon")
