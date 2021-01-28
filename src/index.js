@@ -294,11 +294,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                   'id': item.track.id
                                 };
             allTrackData.push(trackObject);
-
           });
 
-          // get audioFeatures          
-          let audioFeatures = [];
+          
           
           console.log('test')
           console.log(trackIds)
@@ -308,7 +306,9 @@ document.addEventListener('DOMContentLoaded', () => {
           
           let firstHundred = trackIds.slice(0, 100);
           let remaining = trackIds.slice(100);
-
+          // get audioFeatures          
+          let audioFeatures = [];
+          
           let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
           let tracksOptions = {
             url: tracksUrl,
@@ -322,26 +322,44 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (!error && response.statusCode === 200){
              
-              audioFeatures.push(body);
+              
               // flatten audio features array
               let allAudioFeatures = [];
               // let offset = numCompleted * 100;
-              audioFeatures.forEach(part => {
-                part.audio_features.forEach(datum => {
-                  if (datum) {
-                    allAudioFeatures.push(datum)
-                  }
-                })
-              })
+              
+              body.audio_features.forEach(datum => {
+                if (datum) {
+                  allAudioFeatures.push(datum)
+                }
+              });
+
               console.log('----------');
               console.log(allAudioFeatures);
               console.log('----------');
-
-              return 
+              
               tracksOptions.url = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + remaining.join("%2C");
               request.get(tracksOptions, function (error, response, body) {
+                body.audio_features.forEach(datum => {
+                  if (datum) {
+                    allAudioFeatures.push(datum)
+                  }
+                });
+                console.log('2----------');
+                console.log(allAudioFeatures);
+                console.log('2----------');
 
+                allTrackData = allTrackData.map((el, i) => {
+                  console.log(i);
+                  console.log(el.id);
+                  console.log(allAudioFeatures[i].id)
+                  return { ...el, ...allAudioFeatures[i] }
+                });
+                console.log('-------');
+                console.log(allTrackData);
+                console.log('-------');
               });
+              return
+              
               allTrackData = allTrackData.map((el, i) => {
                 return {...el, ...allAudioFeatures[i]}
               });
@@ -915,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 .style("fill","#1286FE")
               
               const dataPoints = graph.selectAll("circle")
-                .data(allTrackData)
+                .data(allAudioFeatures)
 
               dataPoints.enter()
                 .append("circle")
@@ -1079,7 +1097,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 errors = true;
               } 
             }
-
           })
         });
           
