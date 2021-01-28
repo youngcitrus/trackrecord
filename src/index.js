@@ -444,6 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
                   
                   function click(d){
                     // remove initial instructions
+                    console.log(d);
                     if (d.parent) {
                       if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
                       
