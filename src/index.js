@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         let allTrackData = [];
         const trackIds = [];
-        console.log(body);
+        // console.log(body);
         
         body.items.forEach(item => {
           // push track IDs in API response into trackIds array
@@ -58,10 +58,9 @@ document.addEventListener('DOMContentLoaded', () => {
           };
           allTrackData.push(trackObject);
         });
-        let test = [1,2,3];
-        console.log(test);
-        console.log(trackIds);
-        console.log(allTrackData[100]);
+        
+        // console.log(trackIds);
+        
         // remove loading dots once API call provides response, replace it with navigation start button
         document.getElementById("loading-dots-1").remove();
 
@@ -296,10 +295,8 @@ document.addEventListener('DOMContentLoaded', () => {
           });
 
           
-          
-          console.log('test')
-          console.log(trackIds)
-          console.log(allTrackData);
+          // console.log(trackIds)
+          // console.log(allTrackData);
           let errors = false;
           
           
@@ -329,9 +326,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
               });
 
-              console.log('----------');
-              console.log(allAudioFeatures);
-              console.log('----------');
+              // console.log('----------');
+              // console.log(allAudioFeatures);
+              // console.log('----------');
               
               tracksOptions.url = 'https://api.spotify.com/v1/audio-features?ids=' + remaining.join("%2C");
               request.get(tracksOptions, function (error, response, body) {
@@ -340,16 +337,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     allAudioFeatures.push(datum)
                   }
                 });
-                console.log('2----------');
-                console.log(allAudioFeatures);
-                console.log('2----------');
+                
+                // console.log(allAudioFeatures);
 
                 allTrackData = allTrackData.map((el, i) => {
                   return { ...el, ...allAudioFeatures[i] }
                 });
-                console.log('-------');
-                console.log(allTrackData);
-                console.log('-------');
+
+                // console.log(allTrackData);
                 // create navigation button to go back to album image from sunburst chart
                 const prev2 = document.createElement("i")
                 prev2.setAttribute("class", "fas fa-angle-up");
@@ -375,8 +370,8 @@ document.addEventListener('DOMContentLoaded', () => {
                   }
                   dataByKey[order].push(track);
                 });
-                console.log('data by key!!!')
-                console.log(dataByKey);
+                // console.log('data by key!!!')
+                // console.log(dataByKey);
 
                 let colors = d3.scaleOrdinal()
                 .domain(dataByKey)
@@ -456,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 function click(d) {
                   // remove initial instructions
-                  console.log(d);
+                  // console.log(d);
                   if (d.parent) {
                     if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
 
@@ -484,7 +479,7 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('allow', 'encrypted-media')
                       .style('border-radius', '20px')
 
-                    console.log(d.data.key);
+                    // console.log(d.data.key);
                     sunburstArea.append("text")
                       // .text(d.data.artists[0].name)
                       .text("Key: " + keys[d.data.key])
