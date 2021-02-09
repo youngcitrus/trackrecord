@@ -16,7 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
   //request auth token from Spotify API
 
   const authOptions = {
-      url: 'https://cors-anywhere.herokuapp.com/https://accounts.spotify.com/api/token',
+      url: 'https://accounts.spotify.com/api/token',
       headers: {
         'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')),
           },
@@ -31,11 +31,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!error && response.statusCode === 200) {
       
       // use the access token to access the Spotify Web API
-      // request 49 latest album/single releases
 
       let token = body.access_token;
       let trackOptions = {
-        url: 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/451I9htT786qoNr03QB8WE/tracks',
+        url: 'https://api.spotify.com/v1/playlists/451I9htT786qoNr03QB8WE/tracks',
         headers: {
           'Authorization': 'Bearer ' + token
         },
@@ -268,7 +267,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // make API call to get next 100 tracks from playlist: 
         
         
-        let tracksUrl2 = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/playlists/451I9htT786qoNr03QB8WE/tracks?offset=100';
+        let tracksUrl2 = 'https://api.spotify.com/v1/playlists/451I9htT786qoNr03QB8WE/tracks?offset=100';
         
         let trackOptions2 = {
           url: tracksUrl2,
@@ -309,9 +308,9 @@ document.addEventListener('DOMContentLoaded', () => {
           // get audioFeatures          
           let audioFeatures = [];
           
-          let tracksUrl = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
+          let trackFeaturesUrl = 'https://api.spotify.com/v1/audio-features?ids=' + firstHundred.join("%2C") 
           let tracksOptions = {
-            url: tracksUrl,
+            url: trackFeaturesUrl,
             headers: {
               'Authorization': 'Bearer ' + token
               },
@@ -334,7 +333,7 @@ document.addEventListener('DOMContentLoaded', () => {
               console.log(allAudioFeatures);
               console.log('----------');
               
-              tracksOptions.url = 'https://cors-anywhere.herokuapp.com/https://api.spotify.com/v1/audio-features?ids=' + remaining.join("%2C");
+              tracksOptions.url = 'https://api.spotify.com/v1/audio-features?ids=' + remaining.join("%2C");
               request.get(tracksOptions, function (error, response, body) {
                 body.audio_features.forEach(datum => {
                   if (datum) {
