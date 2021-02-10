@@ -12,7 +12,7 @@ window.onbeforeunload = function () {
 
 // main program run
 document.addEventListener('DOMContentLoaded', () => {
-  
+  console.log("welcome to my application!")
   //request auth token from Spotify API
 
   const authOptions = {
@@ -275,8 +275,6 @@ document.addEventListener('DOMContentLoaded', () => {
           },
           json: true
         };
-
-        
         
         request.get(trackOptions2, function(error, response, body){
           // will store trackIds in array below
