@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 document.getElementById("loading-dots-2").remove();
 
-                const nav2Icon = document.getElementById("nav-2-icon");
+                let nav2Icon = document.getElementById("nav-2-icon");
                 nav2Icon.append(browseByKeyText);
                 nav2Icon.append(lineBreak)
                 nav2Icon.appendChild(nav2);
@@ -1112,8 +1112,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
                 let loadingDots = document.getElementById("loading-dots-2");
                 if (loadingDots) loadingDots.remove();
-                nav2Icon = document.getElementById("nav-2-icon");
-                nav2Icon.append(errorMessage);
+                // nav2Icon = document.getElementById("nav-2-icon");
+                // nav2Icon.append(errorMessage);
                 errors = true;
               } 
             }
