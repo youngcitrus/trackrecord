@@ -699,10 +699,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     let y3 = 100; 
 
                     if (safariAgent) {
-                      y -= 20;
-                      y1 -= 20;
-                      y2 -= 20;
-                      y3 -= 20;
+                      y -= 30;
+                      y1 -= 30;
+                      y2 -= 30;
+                      y3 -= 30;
 
                       keyInstructions.append("text")
                         .text("Spotify key player")
