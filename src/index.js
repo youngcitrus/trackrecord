@@ -450,6 +450,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 function click(d) {
                   // remove initial instructions
                   // console.log(d);
+                  if (!d.parent && level === 0) {
+                    return
+                  }
                   if (d.parent) {
                     if (d3.select('#key-instructions')) d3.select('#key-instructions').remove();
 
@@ -471,10 +474,11 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('x', -115)
                       .attr('y', -50);
 
+
                     let player = foreignObject.append("xhtml:iframe")
                       .attr('id', 'key-player')
-                      .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                       .attr('allow', 'encrypted-media')
+                      .attr('src', 'https://open.spotify.com/embed/track/' + d.data.id)
                       .style('border-radius', '20px')
 
                     // console.log(d.data.key);
