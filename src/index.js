@@ -12,6 +12,12 @@ window.onbeforeunload = function () {
 
 // main program run
 document.addEventListener('DOMContentLoaded', () => {
+  // Detect Safari 
+  let safariAgent = navigator.userAgent.indexOf("Safari") > -1;
+  let chromeAgent = navigator.userAgent.indexOf("Chrome") > -1;
+  // Discard Safari since it also matches Chrome 
+  if ((chromeAgent) && (safariAgent)) safariAgent = false;
+  
   console.log("welcome to my application!")
   //request auth token from Spotify API
 
@@ -679,6 +685,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 // define a function to show instructions for sunburst chart
                 const showKeyInstructions = function () {
                   if (level === 0) {
+
                     const keyInstructions = sunburstArea.append("svg")
                       .attr("id", "key-instructions")
                       .attr("height", 350)
@@ -686,39 +693,59 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('x', -114)
                       .attr('y', -60)
 
+                    let y = 40;
+                    let y1 = 60;
+                    let y2 = 80;
+                    let y3 = 100; 
+
+                    if (safariAgent) {
+                      y -= 20;
+                      y1 -= 20;
+                      y2 -= 20;
+                      y3 -= 20;
+
+                      keyInstructions.append("text")
+                        .text("Spotify key player")
+                        .attr('x', 50)
+                        .attr('y', 130)
+                        .attr("font-weight", "bold")
+                        .style("font-size", 12)
+                        .style("font-family", "Roboto")
+                      keyInstructions.append("text")
+                        .text("not currently supported in Safari.")
+                        .attr('x', 20)
+                        .attr('y', 150)
+                        .attr("font-weight", "bold")
+                        .style("font-size", 12)
+                        .style("font-family", "Roboto")
+                    }
+
                     keyInstructions.append("text")
                       .text("Click a slice with a key label")
                       .attr('x', 28)
-                      .attr('y', 40)
+                      .attr('y', y)
                       .style("font-size", 14)
                       .style("font-family", "Roboto")
 
                     keyInstructions.append("text")
                       .text("to browse all songs in that key")
                       .attr('x', 21)
-                      .attr('y', 60)
+                      .attr('y', y1)
                       .style("font-size", 14)
                       .style("font-family", "Roboto")
 
                     keyInstructions.append("text")
                       .text("or click on an outer slice to listen")
                       .attr('x', 14)
-                      .attr('y', 80)
+                      .attr('y', y2)
                       .style("font-size", 14)
                       .style("font-family", "Roboto")
 
                     keyInstructions.append("text")
                       .text("to a preview of a song in a certain key.")
                       .attr('x', 0)
-                      .attr('y', 100)
+                      .attr('y', y3)
                       .style("font-size", 14)
-                      .style("font-family", "Roboto")
-
-                    keyInstructions.append("text")
-                      .text("(Key player not currently supported in Safari)")
-                      .attr('x', 0)
-                      .attr('y', 130)
-                      .style("font-size", 12)
                       .style("font-family", "Roboto")
                   }
                 }
