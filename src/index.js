@@ -713,6 +713,13 @@ document.addEventListener('DOMContentLoaded', () => {
                       .attr('y', 100)
                       .style("font-size", 14)
                       .style("font-family", "Roboto")
+
+                    keyInstructions.append("text")
+                      .text("(Key player not currently supported in Safari)")
+                      .attr('x', 0)
+                      .attr('y', 130)
+                      .style("font-size", 12)
+                      .style("font-family", "Roboto")
                   }
                 }
 
