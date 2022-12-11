@@ -19,7 +19,7 @@
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "jquery": "^3.4.1",
     "lodash": "^4.17.15",
     "request": "^2.88.0"
